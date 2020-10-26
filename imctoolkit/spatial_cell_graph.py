@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from typing import Sequence
+from typing import Collection
 
 from .single_cell_data import SingleCellData
 
@@ -21,7 +21,8 @@ class SpatialCellGraph:
     """Spatial cell graph constructed from single-cell data
 
     :ivar data: single-cell data, as :class:`pandas.DataFrame`, with cell IDs as index and feature names as columns
-    :ivar adj_mat: boolean adjacency matrix, as :class:`xarray.DataArray` with coordinates ``(cell IDs, cell IDs)``
+    :ivar adj_mat: boolean adjacency matrix, as :class:`xarray.DataArray` with shape ``(cell_i, cell_j)`` and
+        coordinates ``(cell IDs, cell IDs)``. A cell `j` is a neighbor of cell `i`, iff ``adj_mat[i, j] == True``.
     """
 
     def __init__(self, data, adj_mat, _skip_check_params: bool = False):
@@ -33,22 +34,24 @@ class SpatialCellGraph:
         :type adj_mat: any type supported by xarray.DataArrays
         """
         if not _skip_check_params:
-            data, adj_mat = self._check_params(data, adj_mat, 'adjacency')
+            data, adj_mat = self._check_params(data, adj_mat)
         self.data = data
         self.adj_mat = adj_mat
 
     @staticmethod
-    def _check_params(data, mat, mat_type: str):
+    def _check_params(data, mat):
         if isinstance(data, SingleCellData):
             data = data.to_dataframe()
         if not isinstance(data, pd.DataFrame):
             data = pd.DataFrame(data)
         if not isinstance(mat, xr.DataArray):
-            mat = xr.DataArray(np.asarray(mat), dims=('cell', 'cell'))
-        mat_cells_in_data = np.in1d(mat.coords['cell'], data.index)
+            mat = xr.DataArray(np.asarray(mat), dims=('cell_i', 'cell_j'))
+        if not np.all(mat.coords['cell_i'].values == mat.coords['cell_j'].values):
+            raise ValueError('Inconsistent row and column indices')
+        mat_cells_in_data = np.in1d(mat.coords['cell_i'].values, data.index.values)
         if not np.all(mat_cells_in_data):
-            missing_cell_ids = mat.coords["cell"][mat_cells_in_data].values.tolist()
-            raise ValueError(f'Missing cell data for cell IDs in {mat_type} matrix: {missing_cell_ids}')
+            missing_cell_ids = mat.coords['cell_i'][mat_cells_in_data].values.tolist()
+            raise ValueError(f'Missing cell data for cell IDs in matrix: {missing_cell_ids}')
         return data, mat
 
     @property
@@ -57,9 +60,9 @@ class SpatialCellGraph:
         return len(self.cell_ids)
 
     @property
-    def cell_ids(self) -> Sequence[int]:
+    def cell_ids(self) -> Collection[int]:
         """Cell IDs"""
-        return self.data.index
+        return self.data.index.tolist()
 
     @property
     def num_features(self) -> int:
@@ -67,9 +70,9 @@ class SpatialCellGraph:
         return len(self.feature_names)
 
     @property
-    def feature_names(self) -> Sequence[str]:
+    def feature_names(self) -> np.ndarray:
         """Feature names"""
-        return self.data.columns
+        return self.data.columns.values
 
     @property
     def is_undirected(self) -> bool:
@@ -83,13 +86,15 @@ class SpatialCellGraph:
             coordinates
         """
         return xr.Dataset(data_vars={
-            'data': xr.DataArray(self.data, dims=('cell', 'feature')),
-            'adj_mat': xr.DataArray(self.adj_mat, dims=('cell', 'cell')),
-        }, coords={'cell': self.cell_ids, 'feature': self.feature_names})
+            'data': xr.DataArray(self.data, dims=('cell', 'feature'),
+                                 coords={'cell': self.cell_ids, 'feature': self.feature_names}),
+            'adj_mat': self.adj_mat,
+        })
 
-    def to_networkx(self, create_using=None) -> 'nx.Graph':
+    def to_networkx(self, weight_mat=None, create_using=None) -> 'nx.Graph':
         """Returns a :class:`networkx.Graph` representation of the current instance
 
+        :param weight_mat: optional edge weight matrix, will be multiplied by :attr:`adj_mat`
         :param create_using: type of graph to create, defaults to :class:`networkx.Graph` for undirected graphs and
             :class:`networkx.DiGraph` for directed graphs when ``None``
         :type create_using: see :func:`networkx.from_numpy_array`
@@ -99,8 +104,14 @@ class SpatialCellGraph:
             raise RuntimeError('networkx is not installed')
         if create_using is None:
             create_using = nx.Graph if self.is_undirected else nx.DiGraph
-        graph = nx.from_numpy_array(self.adj_mat.values, create_using=create_using)
+        adj_mat = self.adj_mat.values
+        if weight_mat is not None:
+            adj_mat *= weight_mat
+        graph: nx.Graph = nx.from_numpy_array(adj_mat, create_using=create_using)
         graph = nx.relabel_nodes(graph, mapping=dict(zip(graph, self.cell_ids)), copy=False)
+        if weight_mat is None:
+            for n1, n2, edge_attrs in graph.edges(data=True):
+                edge_attrs.clear()
         node_attributes = {}
         for cell_id in self.cell_ids:
             node_attributes[cell_id] = self.data.loc[cell_id, :].to_dict()
@@ -119,7 +130,7 @@ class SpatialCellGraph:
             raise RuntimeError('python-igraph is not installed')
         if mode is None:
             mode = igraph.ADJ_UNDIRECTED if self.is_undirected else igraph.ADJ_DIRECTED
-        graph: igraph.Graph = igraph.Graph.Adjacency(self.adj_mat.values.tolist(), mode=mode)
+        graph = igraph.Graph.Adjacency(self.adj_mat.values.tolist(), mode=mode)
         graph.vs['cell_id'] = self.cell_ids
         for feature_name in self.feature_names:
             graph.vs[feature_name] = self.data.loc[self.cell_ids, feature_name].values.tolist()
@@ -132,7 +143,9 @@ class SpatialCellGraph:
         :param dataset: Dataset of the same format as created by :func:`to_dataset`
         :return: a new :class:`SpatialCellGraph` instance
         """
-        return SpatialCellGraph(dataset['data'].to_dataframe(), dataset['adj_mat'])
+        data = pd.DataFrame(dataset['data'], index=pd.Index(data=dataset['data'].coords['cell'].values, name='cell'),
+                            columns=pd.Index(data=dataset['data'].coords['feature'].values, name='feature'))
+        return SpatialCellGraph(data, dataset['adj_mat'])
 
     @classmethod
     def construct_knn_graph(cls, data, dist_mat, k: int) -> 'SpatialCellGraph':
@@ -140,17 +153,17 @@ class SpatialCellGraph:
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
         :type data: SingleCellData, or any type supported by pandas.DataFrames
-        :param dist_mat: distance matrix, shape: ``(cells, features)``
+        :param dist_mat: symmetric distance matrix, shape: ``(cells, cells)``
         :type dist_mat: any type supported by xarray.DataArrays
         :param k: number of nearest neighbors for the graph construction
         :return: a directed k-nearest cell neighbor graph
         """
-        data, dist_mat = cls._check_params(data, dist_mat, 'distance')
+        data, dist_mat = cls._check_params(data, dist_mat)
         adj_mat = xr.zeros_like(dist_mat, dtype='bool')
         knn_indices = np.argpartition(dist_mat.values, k + 1, axis=1)[:, :(k + 1)]
         for current_index, current_knn_indices in enumerate(knn_indices):
             adj_mat[current_index, current_knn_indices] = True
-        adj_mat = np.fill_diagonal(adj_mat, False)
+        np.fill_diagonal(adj_mat.values, False)
         return SpatialCellGraph(data, adj_mat, _skip_check_params=True)
 
     @classmethod
@@ -159,12 +172,12 @@ class SpatialCellGraph:
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
         :type data: SingleCellData, or any type supported by pandas.DataFrames
-        :param dist_mat: distance matrix, shape: ``(cells, features)``
+        :param dist_mat: symmetric distance matrix, shape: ``(cells, cells)``
         :type dist_mat: any type supported by xarray.DataArrays
         :param dist_thres: distance hot_pixel_thres, (strictly) below which cells are considered neighbors
         :return: an undirected cell neighborhood graph
         """
-        data, dist_mat = cls._check_params(data, dist_mat, 'distance')
-        adj_mat = (dist_mat < dist_thres)
-        adj_mat = np.fill_diagonal(adj_mat, False)
+        data, dist_mat = cls._check_params(data, dist_mat)
+        adj_mat = xr.DataArray(dist_mat < dist_thres)
+        np.fill_diagonal(adj_mat.values, False)
         return SpatialCellGraph(data, adj_mat, _skip_check_params=True)

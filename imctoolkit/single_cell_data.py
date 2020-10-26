@@ -86,7 +86,7 @@ class SingleCellData:
             img = img.data
         if not isinstance(img, xr.DataArray):
             img = xr.DataArray(data=img, dims=('c', 'y', 'x'))
-        mask = np.asarray(mask, dtype='int')
+        mask = np.asarray(mask)
         if img.dims != ('c', 'y', 'x'):
             raise ValueError(f'Invalid image dimensions: expected ("c", "y", "x"), got {img.dims}')
         if channel_names is not None:
@@ -284,6 +284,7 @@ class SingleCellData:
 
         :return: symmetric border distance matrix
         """
+        # TODO speed up computation, e.g. by only computing distances between pixels belonging to cells
         dist_mat = np.zeros((self.num_cells, self.num_cells))
         cell_masks = [self.mask == cell_id for cell_id in self.cell_ids]
         for i, i_id in enumerate(self.cell_ids[:-1]):
