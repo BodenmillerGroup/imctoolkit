@@ -1,0 +1,2 @@
+class TestImage:
+    pass  # TODO
