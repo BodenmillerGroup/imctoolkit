@@ -24,7 +24,7 @@ Optional dependencies include:
 * `python-igraph`_ for exporting spatial cell graphs as igraph graphs
 * `opencv-python`_ for faster image processing
 
-All dependencies and optional dependencies can be installed using ``pip``.
+All dependencies are automatically installed using ``pip``.
 
 .. _Python 3.8: https://www.python.org/
 .. _imctools: https://pypi.org/project/imctools/
@@ -50,4 +50,4 @@ In your virtual environment, install imctoolkit with::
 
 To also install optional dependencies, install imctoolkit with::
 
-    pip install git+https://github.com/BodenmillerGroup/imctoolkit#egg=imctoolkit[all]
+    pip install "git+https://github.com/BodenmillerGroup/imctoolkit#egg=imctoolkit[all]"

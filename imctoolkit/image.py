@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import tifffile
 import xarray as xr
@@ -48,9 +49,9 @@ class Image:
         return self.data.sizes['c']
 
     @property
-    def channel_names(self) -> Sequence[str]:
+    def channel_names(self) -> np.ndarray:
         """Channel names"""
-        return self.data.coords['c']
+        return self.data.coords['c'].values
 
     def write_ome_tiff(self, path: Union[str, Path], **kwargs):
         """Writes an OME-TIFF file using :func:`xtiff.to_tiff`
@@ -116,7 +117,7 @@ class Image:
         :return: a new :class:`Image` instance
         """
         with tifffile.TiffFile(path) as tiff:
-            img_data = xr.DataArray(tiff.asarray(), dims=('c', 'y', 'x'))
+            img_data = xr.DataArray(tiff.asarray().squeeze(), dims=('c', 'y', 'x'))
             ome_metadata = tiff.ome_metadata
         if panel is not None:
             if not isinstance(panel, pd.DataFrame):
@@ -128,13 +129,16 @@ class Image:
             panel = panel.loc[panel[panel_channel_col].notna(), [panel_channel_col, panel_channel_name_col]]
             img_data = img_data[panel[panel_channel_col].astype(int), :, :]
             img_data.coords['c'] = panel[panel_channel_name_col].astype(str)
+            if channel_names is not None:
+                img_data = img_data.loc[channel_names, :, :]
         elif ome_metadata is not None:
             element_tree = ElementTree.fromstring(ome_metadata)
-            channel_elems = element_tree.findall('./Image/Pixels/Channel')
+            ome_namespaces = {'ome': 'http://www.openmicroscopy.org/Schemas/OME/2016-06'}
+            channel_elems = element_tree.findall('./ome:Image/ome:Pixels/ome:Channel', namespaces=ome_namespaces)
             channel_elems.sort(key=lambda channel_elem: channel_elem.attrib['ID'])
             img_data.coords['c'] = [channel_elem.attrib[ome_channel_name_attrib] for channel_elem in channel_elems]
+            if channel_names is not None:
+                img_data = img_data.loc[channel_names, :, :]
         else:
             img_data.coords['c'] = channel_names
-        if channel_names is not None:
-            img_data = img_data.loc[channel_names, :, :]
         return Image(img_data)
