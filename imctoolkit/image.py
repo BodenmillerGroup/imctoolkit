@@ -135,16 +135,15 @@ class Image:
             panel = panel.loc[panel[panel_channel_col].notna(), [panel_channel_col, panel_channel_name_col]]
             img_data = img_data[panel[panel_channel_col].astype(int), :, :]
             img_data.coords['c'] = panel[panel_channel_name_col].astype(str)
-            if channel_names is not None:
-                img_data = img_data.loc[channel_names, :, :]
         elif ome_metadata is not None:
             element_tree = ElementTree.fromstring(ome_metadata)
             ome_namespaces = {'ome': 'http://www.openmicroscopy.org/Schemas/OME/2016-06'}
             channel_elems = element_tree.findall('./ome:Image/ome:Pixels/ome:Channel', namespaces=ome_namespaces)
-            channel_elems.sort(key=lambda channel_elem: channel_elem.attrib['ID'])
-            img_data.coords['c'] = [channel_elem.attrib[ome_channel_name_attrib] for channel_elem in channel_elems]
-            if channel_names is not None:
-                img_data = img_data.loc[channel_names, :, :]
+            if len(channel_elems) == img_data.sizes['c']:
+                channel_elems.sort(key=lambda channel_elem: channel_elem.attrib['ID'])
+                img_data.coords['c'] = [channel_elem.attrib[ome_channel_name_attrib] for channel_elem in channel_elems]
         else:
             img_data.coords['c'] = channel_names
+        if channel_names is not None:
+            img_data = img_data.loc[channel_names, :, :]
         return Image(img_data)

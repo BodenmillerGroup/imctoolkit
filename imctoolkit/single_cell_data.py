@@ -250,8 +250,8 @@ class SingleCellData:
     def _to_table(arr: xr.DataArray) -> pd.DataFrame:
         return pd.DataFrame(
             data=arr.values,
-            index=pd.Index(arr.coords[arr.dims[0]].values.tolist(), name=arr.dims[0]),
-            columns=pd.Index(arr.coords[arr.dims[1]].values.tolist(), name=arr.dims[1])
+            index=pd.Index(arr.coords[arr.dims[0]].values, name=arr.dims[0]),
+            columns=pd.Index(arr.coords[arr.dims[1]].values, name=arr.dims[1])
         )
 
     def compute_cell_intensities(self, aggr: Callable[[np.ndarray], Any]) -> xr.DataArray:
@@ -303,7 +303,7 @@ class SingleCellData:
 
         :return: DataFrame (index: cell IDs, columns: see description)
         """
-        df = pd.DataFrame(index=pd.Index(self.cell_ids.tolist(), name='cell'))
+        df = pd.DataFrame(index=pd.Index(self.cell_ids, name='cell'))
         df = pd.merge(df, self.min_intensities_table.add_prefix('min_'), left_index=True, right_index=True)
         df = pd.merge(df, self.max_intensities_table.add_prefix('max'), left_index=True, right_index=True)
         df = pd.merge(df, self.mean_intensities_table.add_prefix('mean_'), left_index=True, right_index=True)
@@ -339,8 +339,8 @@ class SingleCellData:
         if anndata is None:
             raise RuntimeError('anndata is not installed')
         return anndata.AnnData(
-            obs=self.regionprops_table,
-            var=pd.DataFrame(index=pd.Index(data=self.channel_names.tolist(), name='channel')),
+            obs=pd.DataFrame(data=self.regionprops_table, index=pd.Index(data=self.cell_ids.astype(str), name='cell')),
+            var=pd.DataFrame(index=pd.Index(data=self.channel_names, name='channel')),
             layers={
                 'min_intensities': self.min_intensities.values,
                 'max_intensities': self.max_intensities.values,
