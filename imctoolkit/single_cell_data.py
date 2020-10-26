@@ -10,7 +10,7 @@ from scipy.spatial import distance
 from skimage import measure
 from typing import Any, Callable, Optional, Sequence, Union
 
-from image import Image
+from .image import Image
 
 try:
     import anndata

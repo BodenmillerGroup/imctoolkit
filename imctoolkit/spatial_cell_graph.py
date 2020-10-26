@@ -4,7 +4,7 @@ import xarray as xr
 
 from typing import Sequence
 
-from single_cell_data import SingleCellData
+from .single_cell_data import SingleCellData
 
 try:
     import networkx as nx
