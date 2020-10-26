@@ -1,5 +1,5 @@
-Getting started
-===============
+Quickstart
+==========
 
 Loading images
 --------------
@@ -44,9 +44,9 @@ The single-cell data for a given image and a corresponding cell mask can be acce
     The :attr:`img` parameter of :func:`imctoolkit.SingleCellData.__init__` is not restricted to
     :class:`imctoolkit.Image` instances, but also accepts e.g. numpy arrays and xarray DataArrays.
 
-The resulting :class:`imctoolkit.SingleCellData` instance provides a range of properties to extract single-cell data
-for the provided image/cell mask pair, either as :class:`xarray.DataArray` or as :class:`pandas.DataFrame` table
-(properties suffixed by ``_table``). For example, to extract the channel-wise mean intensities:
+The resulting :class:`imctoolkit.SingleCellData` instance exposes a range of properties to extract single-cell intensity
+data for the provided image/cell mask pair, either as :class:`xarray.DataArray` or as :class:`pandas.DataFrame` table
+(properties suffixed by ``_table``). For example, to extract the channel-wise mean intensities per cell:
 
 .. code-block::
 
@@ -56,8 +56,8 @@ for the provided image/cell mask pair, either as :class:`xarray.DataArray` or as
 
     These properties will be computed upon first access (`lazy`), and at first access only (`cached`).
 
-In addition to ``intensity`` properties, the :class:`imctoolkit.SingleCellData` class also provides access to region
-properties of the cell mask (``regionprops``, lazy and cached):
+In addition to intensity properties, the :class:`imctoolkit.SingleCellData` class also provides access to region
+properties of the cell mask (lazy and cached):
 
 .. code-block::
 

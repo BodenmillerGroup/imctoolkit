@@ -26,7 +26,7 @@ class Image:
         :param channel_names: channel names
         """
         if not isinstance(data, xr.DataArray):
-            data = xr.DataArray(data, dims=('c', 'y', 'x'))
+            data = xr.DataArray(data=data, dims=('c', 'y', 'x'))
         if data.dims != ('c', 'y', 'x'):
             raise ValueError(f'Invalid image dimensions: expected ("c", "y", "x"), got {data.dims}')
         if channel_names is not None:
@@ -75,9 +75,12 @@ class Image:
             taken, e.g. ``'channel_labels'``
         :return: a new :class:`Image` instance
         """
+        if not isinstance(path, Path):
+            path = Path(path)
         parser = TxtParser(path)
         acquisition_data = parser.get_acquisition_data()
-        return Image(acquisition_data.image_data, channel_names=getattr(acquisition_data, channel_names_attr))
+        img_data = xr.DataArray(data=acquisition_data.image_data, dims=('c', 'y', 'x'), name=path.name)
+        return Image(img_data, channel_names=getattr(acquisition_data, channel_names_attr))
 
     @staticmethod
     def read_imc_mcd(path: Union[str, Path], acquisition_id: int, channel_names_attr: str = 'channel_names') -> 'Image':
@@ -91,9 +94,12 @@ class Image:
             taken, e.g. ``'channel_labels'``
         :return: a new :class:`Image` instance
         """
+        if not isinstance(path, Path):
+            path = Path(path)
         parser = McdParser(path)
         acquisition_data = parser.get_acquisition_data(acquisition_id)
-        return Image(acquisition_data.image_data, channel_names=getattr(acquisition_data, channel_names_attr))
+        img_data = xr.DataArray(data=acquisition_data.image_data, dims=('c', 'y', 'x'), name=path.name)
+        return Image(img_data, channel_names=getattr(acquisition_data, channel_names_attr))
 
     @staticmethod
     def read_tiff(path, panel=None, panel_channel_col: str = 'channel', panel_channel_name_col: str = 'channel_name',
@@ -117,7 +123,7 @@ class Image:
         :return: a new :class:`Image` instance
         """
         with tifffile.TiffFile(path) as tiff:
-            img_data = xr.DataArray(tiff.asarray().squeeze(), dims=('c', 'y', 'x'))
+            img_data = xr.DataArray(data=tiff.asarray().squeeze(), dims=('c', 'y', 'x'))
             ome_metadata = tiff.ome_metadata
         if panel is not None:
             if not isinstance(panel, pd.DataFrame):
