@@ -53,6 +53,9 @@ class Image:
         """Channel names"""
         return self.data.coords['c'].values
 
+    def copy(self) -> 'Image':
+        return Image(self.data.copy(deep=True))
+
     def write_ome_tiff(self, path: Union[str, Path], **kwargs):
         """Writes an OME-TIFF file using :func:`xtiff.to_tiff`
 

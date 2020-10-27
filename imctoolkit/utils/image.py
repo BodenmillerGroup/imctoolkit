@@ -3,6 +3,9 @@
 import numpy as np
 
 from scipy.ndimage import filters
+from typing import Union
+
+from ..image import Image
 
 try:
     import cv2
@@ -13,7 +16,8 @@ except:
     CV2_BORDER_DEFAULT = 4
 
 
-def hot_pixel_filter(img: np.ndarray, hot_pixel_thres: float, inplace: bool = False) -> np.ndarray:
+def hot_pixel_filter(img: Union[np.ndarray, Image], hot_pixel_thres: float,
+                     inplace: bool = False) -> Union[np.ndarray, Image]:
     """Hot pixel filter as implemented in https://github.com/BodenmillerGroup/ImcPluginsCP
 
     Sets all hot pixels to the maximum of their 8-neighborhood. Hot pixels are defined as pixels, whose values are
@@ -24,6 +28,11 @@ def hot_pixel_filter(img: np.ndarray, hot_pixel_thres: float, inplace: bool = Fa
     :param inplace: if ``True``, the image is modified in-place
     :return: The hot pixel-filtered image
     """
+    if isinstance(img, Image):
+        if not inplace:
+            img = img.copy()
+        img.data.values = hot_pixel_filter(img.data.values, hot_pixel_thres, inplace=True)
+        return img
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     kernel = np.ones((3, 3), dtype=np.uint8)
@@ -42,15 +51,21 @@ def hot_pixel_filter(img: np.ndarray, hot_pixel_thres: float, inplace: bool = Fa
     return img
 
 
-def median_filter_cv2(img: np.ndarray, size: int) -> np.ndarray:
+def median_filter_cv2(img: Union[np.ndarray, Image], size: int, inplace: bool = False) -> Union[np.ndarray, Image]:
     """Fast median blur using OpenCV
 
     :param img: raw image data, shape: ``(c, y, x)``
     :param size: size of the median filter, must be odd
+    :param inplace: if ``True``, the image is modified in-place when possible
     :return: the median-filtered image
     """
     if cv2 is None:
         raise RuntimeError('python-opencv is not installed')
+    if isinstance(img, Image):
+        if not inplace:
+            img = img.copy()
+        img.data.values = median_filter_cv2(img.data.values, size, inplace=True)
+        return img
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     if size <= 0:
@@ -64,16 +79,23 @@ def median_filter_cv2(img: np.ndarray, size: int) -> np.ndarray:
     return np.moveaxis(img, 2, 0)
 
 
-def gaussian_filter_cv2(img: np.ndarray, size: int = 0, sigma: float = 0) -> np.ndarray:
+def gaussian_filter_cv2(img: Union[np.ndarray, Image], size: int = 0, sigma: float = 0,
+                        inplace: bool = False) -> Union[np.ndarray, Image]:
     """Fast Gaussian blur using OpenCV
 
     :param img: raw image data, shape: ``(c, y, x)``
     :param size: size of the median filter, must be odd
     :param sigma: Gaussian kernel standard deviation
+    :param inplace: if ``True``, the image is modified in-place when possible
     :return: the Gaussian-filtered image
     """
     if cv2 is None:
         raise RuntimeError('python-opencv is not installed')
+    if isinstance(img, Image):
+        if not inplace:
+            img = img.copy()
+        img.data.values = gaussian_filter_cv2(img.data.values, size=size, sigma=sigma, inplace=True)
+        return img
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     if size <= 0:
@@ -87,8 +109,8 @@ def gaussian_filter_cv2(img: np.ndarray, size: int = 0, sigma: float = 0) -> np.
     return np.moveaxis(img, 2, 0)
 
 
-def rotate_centered_cv2(img: np.ndarray, angle: float, border_mode: int = CV2_BORDER_DEFAULT,
-                        expand_bbox: bool = False) -> np.ndarray:
+def rotate_centered_cv2(img: Union[np.ndarray, Image], angle: float, border_mode: int = CV2_BORDER_DEFAULT,
+                        expand_bbox: bool = False, inplace: bool = False) -> Union[np.ndarray, Image]:
     """Fast centered image rotation using OpenCV
 
     :param img: raw image data, shape: ``(c, y, x)``
@@ -96,10 +118,17 @@ def rotate_centered_cv2(img: np.ndarray, angle: float, border_mode: int = CV2_BO
     :param border_mode: pixel extrapolation method, see :func:`cv2.warpAffine`
     :param expand_bbox: if set to ``True``, the bounding box of the resulting image is expanded to contain the full
         rotated image
+    :param inplace: if ``True``, the image is modified in-place when possible
     :return: the image, rotated around its center
     """
     if cv2 is None:
         raise RuntimeError('python-opencv is not installed')
+    if isinstance(img, Image):
+        if not inplace:
+            img = img.copy()
+        img.data.values = rotate_centered_cv2(img.data.values, angle, border_mode=border_mode, expand_bbox=expand_bbox,
+                                              inplace=True)
+        return img
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     height, width = img.shape[1], img.shape[2]
