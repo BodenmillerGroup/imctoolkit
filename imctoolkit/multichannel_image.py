@@ -11,7 +11,7 @@ from typing import Optional, Sequence, Union
 from xml.etree import ElementTree
 
 
-class Image:
+class MultichannelImage:
     """Multi-channel image
 
     :ivar data: raw image data, as :class:`xarray.DataArray` with dimensions ``(c, y, x)`` and, optionally, channel
@@ -53,8 +53,12 @@ class Image:
         """Channel names"""
         return self.data.coords['c'].values
 
-    def copy(self) -> 'Image':
-        return Image(self.data.copy(deep=True))
+    def copy(self) -> 'MultichannelImage':
+        """Creates a copy of the current instance
+
+        :return: a deep copy of the current instance
+        """
+        return MultichannelImage(self.data.copy(deep=True))
 
     def write_ome_tiff(self, path: Union[str, Path], **kwargs):
         """Writes an OME-TIFF file using :func:`xtiff.to_tiff`
@@ -68,26 +72,27 @@ class Image:
         xtiff.to_tiff(self.data, path, **kwargs)
 
     @staticmethod
-    def read_imc_txt(path: Union[str, Path], channel_names_attr: str = 'channel_names') -> 'Image':
-        """Creates a new :class:`Image` from the specified Fluidigm(TM) TXT file
+    def read_imc_txt(path: Union[str, Path], channel_names_attr: str = 'channel_names') -> 'MultichannelImage':
+        """Creates a new :class:`MultichannelImage` from the specified Fluidigm(TM) TXT file
 
         Uses :class:`imctools.io.txt.txtparser.TxtParser` for reading .txt files.
 
         :param path: path to the .txt file
         :param channel_names_attr: :class:`imctools.data.AcquisitionData` attribute from which the channel names will be
             taken, e.g. ``'channel_labels'``
-        :return: a new :class:`Image` instance
+        :return: a new :class:`MultichannelImage` instance
         """
         if not isinstance(path, Path):
             path = Path(path)
         parser = TxtParser(path)
         acquisition_data = parser.get_acquisition_data()
         img_data = xr.DataArray(data=acquisition_data.image_data, dims=('c', 'y', 'x'), name=path.name)
-        return Image(img_data, channel_names=getattr(acquisition_data, channel_names_attr))
+        return MultichannelImage(img_data, channel_names=getattr(acquisition_data, channel_names_attr))
 
     @staticmethod
-    def read_imc_mcd(path: Union[str, Path], acquisition_id: int, channel_names_attr: str = 'channel_names') -> 'Image':
-        """Creates a new :class:`Image` from the specified Fluidigm(TM) MCD file
+    def read_imc_mcd(path: Union[str, Path], acquisition_id: int,
+                     channel_names_attr: str = 'channel_names') -> 'MultichannelImage':
+        """Creates a new :class:`MultichannelImage` from the specified Fluidigm(TM) MCD file
 
         Uses :class:`imctools.io.txt.mcdparser.McdParser` for reading .mcd files.
 
@@ -95,19 +100,20 @@ class Image:
         :param acquisition_id: acquisition ID to read (unique across slides)
         :param channel_names_attr: :class:`imctools.data.AcquisitionData` attribute from which the channel names will be
             taken, e.g. ``'channel_labels'``
-        :return: a new :class:`Image` instance
+        :return: a new :class:`MultichannelImage` instance
         """
         if not isinstance(path, Path):
             path = Path(path)
         parser = McdParser(path)
         acquisition_data = parser.get_acquisition_data(acquisition_id)
         img_data = xr.DataArray(data=acquisition_data.image_data, dims=('c', 'y', 'x'), name=path.name)
-        return Image(img_data, channel_names=getattr(acquisition_data, channel_names_attr))
+        return MultichannelImage(img_data, channel_names=getattr(acquisition_data, channel_names_attr))
 
     @staticmethod
     def read_tiff(path, panel=None, panel_channel_col: str = 'channel', panel_channel_name_col: str = 'channel_name',
-                  channel_names: Optional[Sequence[str]] = None, ome_channel_name_attrib: str = 'Name') -> 'Image':
-        """Creates a new :class:`Image` from the specified TIFF/OME-TIFF file
+                  channel_names: Optional[Sequence[str]] = None,
+                  ome_channel_name_attrib: str = 'Name') -> 'MultichannelImage':
+        """Creates a new :class:`MultichannelImage` from the specified TIFF/OME-TIFF file
 
         Uses :class:`tifffile.TiffFile` for reading .tiff files. When reading an OME-TIFF file and :paramref:`panel` is
         not specified, the channel names are taken from the embedded OME-XML.
@@ -123,7 +129,7 @@ class Image:
             together with :paramref:`panel`, acts as a channel selector.
         :param ome_channel_name_attrib: name of the OME-XML Channel element attribute from which the channel names will
             be taken, see https://www.openmicroscopy.org/Schemas/Documentation/Generated/OME-2016-06/ome.html.
-        :return: a new :class:`Image` instance
+        :return: a new :class:`MultichannelImage` instance
         """
         with tifffile.TiffFile(path) as tiff:
             img_data = xr.DataArray(data=tiff.asarray().squeeze(), dims=('c', 'y', 'x'))
@@ -149,4 +155,4 @@ class Image:
             img_data.coords['c'] = channel_names
         if channel_names is not None:
             img_data = img_data.loc[channel_names, :, :]
-        return Image(img_data)
+        return MultichannelImage(img_data)

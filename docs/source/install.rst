@@ -44,7 +44,7 @@ All dependencies are automatically installed using ``pip``.
 Installing imctoolkit
 ---------------------
 
-In your virtual environment, install imctoolkit with::
+In your virtual environment, install imctoolkit and its dependencies with::
 
     pip install git+https://github.com/BodenmillerGroup/imctoolkit
 

@@ -10,7 +10,7 @@ from scipy.spatial import distance
 from skimage import measure
 from typing import Any, Callable, Optional, Sequence, Union
 
-from .image import Image
+from .multichannel_image import MultichannelImage
 
 try:
     import anndata
@@ -73,7 +73,7 @@ class SingleCellData:
         """
 
         :param img: intensity image, shape: ``(c, y, x)``
-        :type img: Image, or any type supported by xarray.DataArrays
+        :type img: MultichannelImage, or any type supported by xarray.DataArrays
         :param mask: cell mask, shape: ``(y, x)``
         :type mask: any type supported by numpy.ndarrays
         :param channel_names: channel names
@@ -82,7 +82,7 @@ class SingleCellData:
         """
         if region_properties is None:
             region_properties = self.DEFAULT_REGION_PROPERTIES
-        if isinstance(img, Image):
+        if isinstance(img, MultichannelImage):
             img = img.data
         if not isinstance(img, xr.DataArray):
             img = xr.DataArray(data=img, dims=('c', 'y', 'x'))

@@ -5,7 +5,7 @@ import numpy as np
 from scipy.ndimage import filters
 from typing import Union
 
-from ..image import Image
+from ..multichannel_image import MultichannelImage
 
 try:
     import cv2
@@ -16,8 +16,20 @@ except:
     CV2_BORDER_DEFAULT = 4
 
 
-def hot_pixel_filter(img: Union[np.ndarray, Image], hot_pixel_thres: float,
-                     inplace: bool = False) -> Union[np.ndarray, Image]:
+def _apply_to_multichannel_image(f, args: dict, img_var: str = 'img', inplace_var: str = 'inplace') -> MultichannelImage:
+    img: MultichannelImage = args[img_var]
+    if inplace_var not in args or not args[inplace_var]:
+        img = img.copy()
+    f_args = args.copy()
+    f_args[img_var] = img.data.values
+    if inplace_var in f_args:
+        f_args[inplace_var] = True
+    img.data.values = f(**f_args)
+    return img
+
+
+def hot_pixel_filter(img: Union[np.ndarray, MultichannelImage], hot_pixel_thres: float,
+                     inplace: bool = False) -> Union[np.ndarray, MultichannelImage]:
     """Hot pixel filter as implemented in https://github.com/BodenmillerGroup/ImcPluginsCP
 
     Sets all hot pixels to the maximum of their 8-neighborhood. Hot pixels are defined as pixels, whose values are
@@ -28,11 +40,8 @@ def hot_pixel_filter(img: Union[np.ndarray, Image], hot_pixel_thres: float,
     :param inplace: if ``True``, the image is modified in-place
     :return: The hot pixel-filtered image
     """
-    if isinstance(img, Image):
-        if not inplace:
-            img = img.copy()
-        img.data.values = hot_pixel_filter(img.data.values, hot_pixel_thres, inplace=True)
-        return img
+    if isinstance(img, MultichannelImage):
+        return _apply_to_multichannel_image(hot_pixel_filter, locals())
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     kernel = np.ones((3, 3), dtype=np.uint8)
@@ -51,7 +60,8 @@ def hot_pixel_filter(img: Union[np.ndarray, Image], hot_pixel_thres: float,
     return img
 
 
-def median_filter_cv2(img: Union[np.ndarray, Image], size: int, inplace: bool = False) -> Union[np.ndarray, Image]:
+def median_filter_cv2(img: Union[np.ndarray, MultichannelImage], size: int,
+                      inplace: bool = False) -> Union[np.ndarray, MultichannelImage]:
     """Fast median blur using OpenCV
 
     :param img: raw image data, shape: ``(c, y, x)``
@@ -61,11 +71,8 @@ def median_filter_cv2(img: Union[np.ndarray, Image], size: int, inplace: bool = 
     """
     if cv2 is None:
         raise RuntimeError('python-opencv is not installed')
-    if isinstance(img, Image):
-        if not inplace:
-            img = img.copy()
-        img.data.values = median_filter_cv2(img.data.values, size, inplace=True)
-        return img
+    if isinstance(img, MultichannelImage):
+        return _apply_to_multichannel_image(median_filter_cv2, locals())
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     if size <= 0:
@@ -79,8 +86,8 @@ def median_filter_cv2(img: Union[np.ndarray, Image], size: int, inplace: bool = 
     return np.moveaxis(img, 2, 0)
 
 
-def gaussian_filter_cv2(img: Union[np.ndarray, Image], size: int = 0, sigma: float = 0,
-                        inplace: bool = False) -> Union[np.ndarray, Image]:
+def gaussian_filter_cv2(img: Union[np.ndarray, MultichannelImage], size: int = 0, sigma: float = 0,
+                        inplace: bool = False) -> Union[np.ndarray, MultichannelImage]:
     """Fast Gaussian blur using OpenCV
 
     :param img: raw image data, shape: ``(c, y, x)``
@@ -91,11 +98,8 @@ def gaussian_filter_cv2(img: Union[np.ndarray, Image], size: int = 0, sigma: flo
     """
     if cv2 is None:
         raise RuntimeError('python-opencv is not installed')
-    if isinstance(img, Image):
-        if not inplace:
-            img = img.copy()
-        img.data.values = gaussian_filter_cv2(img.data.values, size=size, sigma=sigma, inplace=True)
-        return img
+    if isinstance(img, MultichannelImage):
+        return _apply_to_multichannel_image(gaussian_filter_cv2, locals())
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     if size <= 0:
@@ -109,8 +113,8 @@ def gaussian_filter_cv2(img: Union[np.ndarray, Image], size: int = 0, sigma: flo
     return np.moveaxis(img, 2, 0)
 
 
-def rotate_centered_cv2(img: Union[np.ndarray, Image], angle: float, border_mode: int = CV2_BORDER_DEFAULT,
-                        expand_bbox: bool = False, inplace: bool = False) -> Union[np.ndarray, Image]:
+def rotate_centered_cv2(img: Union[np.ndarray, MultichannelImage], angle: float, border_mode: int = CV2_BORDER_DEFAULT,
+                        expand_bbox: bool = False, inplace: bool = False) -> Union[np.ndarray, MultichannelImage]:
     """Fast centered image rotation using OpenCV
 
     :param img: raw image data, shape: ``(c, y, x)``
@@ -123,12 +127,8 @@ def rotate_centered_cv2(img: Union[np.ndarray, Image], angle: float, border_mode
     """
     if cv2 is None:
         raise RuntimeError('python-opencv is not installed')
-    if isinstance(img, Image):
-        if not inplace:
-            img = img.copy()
-        img.data.values = rotate_centered_cv2(img.data.values, angle, border_mode=border_mode, expand_bbox=expand_bbox,
-                                              inplace=True)
-        return img
+    if isinstance(img, MultichannelImage):
+        return _apply_to_multichannel_image(rotate_centered_cv2, locals())
     if img.ndim != 3:
         raise ValueError(f'Invalid number of image dimensions: expected 3, got {img.ndim}')
     height, width = img.shape[1], img.shape[2]

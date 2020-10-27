@@ -18,7 +18,7 @@ API reference
     :caption: API reference
     :toctree: stubs
 
-    imctoolkit.Image
+    imctoolkit.MultichannelImage
     imctoolkit.SingleCellData
     imctoolkit.SpatialCellGraph
     imctoolkit.utils.image
