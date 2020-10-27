@@ -34,7 +34,8 @@ def hot_pixel_filter(img: np.ndarray, hot_pixel_thres: float, inplace: bool = Fa
             max_neighbor_img = np.expand_dims(max_neighbor_img, 2)
         max_neighbor_img = np.moveaxis(max_neighbor_img, 2, 0)
     else:
-        max_neighbor_img = filters.maximum_filter(img, kernel, mode='mirror')
+        kernel = kernel[None, :, :]
+        max_neighbor_img = filters.maximum_filter(img, footprint=kernel, mode='mirror')
     filter_mask = (img - max_neighbor_img) > hot_pixel_thres
     if not inplace:
         img = img.copy()
