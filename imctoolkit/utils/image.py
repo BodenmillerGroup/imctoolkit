@@ -6,8 +6,11 @@ from scipy.ndimage import filters
 
 try:
     import cv2
+
+    CV2_BORDER_DEFAULT = cv2.BORDER_DEFAULT
 except:
     cv2 = None
+    CV2_BORDER_DEFAULT = 4
 
 
 def hot_pixel_filter(img: np.ndarray, hot_pixel_thres: float, inplace: bool = False) -> np.ndarray:
@@ -84,7 +87,7 @@ def gaussian_filter_cv2(img: np.ndarray, size: int = 0, sigma: float = 0) -> np.
     return np.moveaxis(img, 2, 0)
 
 
-def rotate_centered_cv2(img: np.ndarray, angle: float, border_mode: int = cv2.BORDER_DEFAULT,
+def rotate_centered_cv2(img: np.ndarray, angle: float, border_mode: int = CV2_BORDER_DEFAULT,
                         expand_bbox: bool = False) -> np.ndarray:
     """Fast centered image rotation using OpenCV
 
