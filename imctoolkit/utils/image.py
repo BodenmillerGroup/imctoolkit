@@ -16,14 +16,15 @@ except:
     CV2_BORDER_DEFAULT = 4
 
 
-def _apply_to_multichannel_image(f, args: dict, img_var: str = 'img', inplace_var: str = 'inplace') -> MultichannelImage:
-    img: MultichannelImage = args[img_var]
-    if inplace_var not in args or not args[inplace_var]:
+def _apply_to_multichannel_image(f, args: dict, img_arg: str = 'img',
+                                 inplace_arg: str = 'inplace') -> MultichannelImage:
+    img: MultichannelImage = args[img_arg]
+    if inplace_arg not in args or not args[inplace_arg]:
         img = img.copy()
     f_args = args.copy()
-    f_args[img_var] = img.data.values
-    if inplace_var in f_args:
-        f_args[inplace_var] = True
+    f_args[img_arg] = img.data.values
+    if inplace_arg in f_args:
+        f_args[inplace_arg] = True
     img.data.values = f(**f_args)
     return img
 
