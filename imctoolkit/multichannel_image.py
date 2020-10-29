@@ -71,6 +71,25 @@ class MultichannelImage:
         """
         xtiff.to_tiff(self.data, path, **kwargs)
 
+    @classmethod
+    def read(cls, path: Union[str, Path], **kwargs) -> 'MultichannelImage':
+        """Creates a new :class:`MultichannelImage` from the specified file
+
+        The file type is determined based on the file extension.
+
+        :param path: path to the file
+        :param kwargs: optional keyword arguments passed to the respective ``read_*`` function
+        :return: a new :class:`MultichannelImage` instance
+        """
+        path_suffix = Path(path).suffix
+        if path_suffix == '.txt':
+            return cls.read_imc_txt(path, **kwargs)
+        elif path_suffix == '.mcd':
+            return cls.read_imc_mcd(path, **kwargs)
+        elif path_suffix == '.tif' or path.suffix == '.tiff':
+            return cls.read_tiff(path, **kwargs)
+        raise ValueError(f'Unsupported file extension: {path_suffix}')
+
     @staticmethod
     def read_imc_txt(path: Union[str, Path], channel_names_attr: str = 'channel_names') -> 'MultichannelImage':
         """Creates a new :class:`MultichannelImage` from the specified Fluidigm(TM) TXT file
@@ -82,8 +101,7 @@ class MultichannelImage:
             taken, e.g. ``'channel_labels'``
         :return: a new :class:`MultichannelImage` instance
         """
-        if not isinstance(path, Path):
-            path = Path(path)
+        path = Path(path)
         parser = TxtParser(path)
         acquisition_data = parser.get_acquisition_data()
         img_data = xr.DataArray(data=acquisition_data.image_data, dims=('c', 'y', 'x'), name=path.name)
@@ -102,8 +120,7 @@ class MultichannelImage:
             taken, e.g. ``'channel_labels'``
         :return: a new :class:`MultichannelImage` instance
         """
-        if not isinstance(path, Path):
-            path = Path(path)
+        path = Path(path)
         parser = McdParser(path)
         acquisition_data = parser.get_acquisition_data(acquisition_id)
         img_data = xr.DataArray(data=acquisition_data.image_data, dims=('c', 'y', 'x'), name=path.name)

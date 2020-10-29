@@ -246,6 +246,14 @@ class SingleCellData:
         """
         return self._to_table(self.regionprops)
 
+    @property
+    def centroids(self) -> xr.DataArray:
+        """Cell centroids
+
+        :return: cell centroids, shape: ``(cells, dimensions=2)``
+        """
+        return self.regionprops.loc[:, ['centroid-0', 'centroid-1']]
+
     @staticmethod
     def _to_table(arr: xr.DataArray) -> pd.DataFrame:
         return pd.DataFrame(
@@ -273,9 +281,7 @@ class SingleCellData:
             https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html
         :return: symmetric centroid distance matrix
         """
-        centroid_cols = [col for col in self.regionprops_table.columns if col.startswith('centroid-')]
-        centroids = self.regionprops_table.loc[:, centroid_cols].to_numpy()
-        dist_mat = distance.squareform(distance.pdist(centroids, metric=metric))
+        dist_mat = distance.squareform(distance.pdist(self.centroids.values, metric=metric))
         return xr.DataArray(data=dist_mat, dims=('cell_i', 'cell_j'),
                             coords={'cell_i': self.cell_ids, 'cell_j': self.cell_ids})
 
