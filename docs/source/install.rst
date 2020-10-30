@@ -20,6 +20,7 @@ Additionally, imctoolkit depends on:
 Optional dependencies include:
 
 * `anndata`_ for exporting single-cell data as AnnData object
+* `fcswrite`_ for writing single-cell data as FCS file
 * `networkx`_ for exporting spatial cell graphs as networkx graphs
 * `python-igraph`_ for exporting spatial cell graphs as igraph graphs
 * `opencv-python`_ for faster image processing
@@ -36,6 +37,7 @@ All dependencies are automatically installed using ``pip``.
 .. _xarray: https://pypi.org/project/xarray/
 .. _xtiff: https://pypi.org/project/xtiff/
 .. _anndata: https://pypi.org/project/anndata/
+.. _fcswrite: https://pypi.org/project/fcswrite/
 .. _networkx: https://pypi.org/project/networkx/
 .. _python-igraph: https://pypi.org/project/python-igraph/
 .. _opencv-python: https://pypi.org/project/opencv-python/

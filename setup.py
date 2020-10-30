@@ -31,6 +31,6 @@ setup(
     ],
     python_requires='>=3.8',
     extras_require={
-        'all': ['anndata', 'networkx', 'python-igraph', 'opencv-python'],
+        'all': ['anndata', 'fcswrite', 'networkx', 'python-igraph', 'opencv-python'],
     },
 )

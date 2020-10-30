@@ -17,6 +17,11 @@ try:
 except:
     anndata = None
 
+try:
+    import fcswrite
+except:
+    fcswrite = None
+
 
 class SingleCellData:
     """Single-cell data extracted from a multi-channel image
@@ -366,3 +371,16 @@ class SingleCellData:
         :param kwargs: other arguments passed to :func:`pandas.DataFrame.to_csv`
         """
         self.to_dataframe().to_csv(path, **kwargs)
+
+    def write_fcs(self, path: Union[str, Path], **kwargs):
+        """Writes an FCS file, see :func:`to_dataframe` for format specifications
+
+        Uses :func:`fcswrite.write_fcs` for writing FCS 3.0 files.
+
+        :param path: path to the .fcs file to be written
+        :param kwargs: other arguments passed to :func:`fcswrite.write_fcs`
+        """
+        if fcswrite is None:
+            raise RuntimeError('fcswrite is not installed')
+        fcswrite.write_fcs(path, self.channel_names, self.to_dataframe().values, **kwargs)
+
