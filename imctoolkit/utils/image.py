@@ -5,7 +5,7 @@ import numpy as np
 from scipy.ndimage import filters
 from typing import Union
 
-from ..multichannel_image import MultichannelImage
+from imctoolkit.multichannel_image import MultichannelImage
 
 try:
     import cv2

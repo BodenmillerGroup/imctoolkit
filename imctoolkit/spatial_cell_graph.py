@@ -4,7 +4,7 @@ import xarray as xr
 
 from typing import Collection
 
-from .single_cell_data import SingleCellData
+from imctoolkit.single_cell_data import SingleCellData
 
 try:
     import networkx as nx

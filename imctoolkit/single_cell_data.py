@@ -10,7 +10,7 @@ from scipy.spatial import distance
 from skimage import measure
 from typing import Any, Callable, Optional, Sequence, Union
 
-from .multichannel_image import MultichannelImage
+from imctoolkit.multichannel_image import MultichannelImage
 
 try:
     import anndata
