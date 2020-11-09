@@ -28,25 +28,25 @@ Extracting single-cell data
 ---------------------------
 
 The single-cell data for a given image and a corresponding cell mask can be accessed through
-:class:`imctoolkit.SingleCellData` objects, which are be created as follows:
+:class:`imctoolkit.ImageSingleCellData` objects, which are be created as follows:
 
 .. code-block::
 
     import tifffile
 
-    from imctoolkit import SingleCellData
+    from imctoolkit import ImageSingleCellData
 
     mask = tifffile.imread('/path/to/mask.tiff')
-    data = SingleCellData(img, mask)
+    data = ImageSingleCellData(img, mask)
 
 .. note::
 
-    The :attr:`img` parameter of :func:`imctoolkit.SingleCellData.__init__` is not restricted to
+    The :attr:`img` parameter of :func:`imctoolkit.ImageSingleCellData.__init__` is not restricted to
     :class:`imctoolkit.MultichannelImage` instances, but also accepts e.g. xarray DataArrays.
 
-:class:`imctoolkit.SingleCellData` instances expose a range of properties to extract single-cell intensity data for the
-provided image/cell mask pair, either as :class:`xarray.DataArray` or as :class:`pandas.DataFrame` (properties
-suffixed by ``_table``). For example, to extract the channel-wise mean intensities per cell:
+:class:`imctoolkit.ImageSingleCellData` exposes a range of properties to extract single-cell intensity data for the
+provided image/cell mask pair, either as :class:`xarray.DataArray` or as :class:`pandas.DataFrame` (properties suffixed
+by ``_table``). For example, to extract the channel-wise mean intensities per cell:
 
 .. code-block::
 
@@ -56,7 +56,7 @@ suffixed by ``_table``). For example, to extract the channel-wise mean intensiti
 
     These properties will be computed upon first access (`lazy`), and at first access only (`cached`).
 
-In addition to intensity properties, the :class:`imctoolkit.SingleCellData` class also provides access to region
+In addition to intensity properties, the :class:`imctoolkit.ImageSingleCellData` class also provides access to region
 properties of the cell mask (lazy and cached):
 
 .. code-block::
@@ -64,11 +64,11 @@ properties of the cell mask (lazy and cached):
     print(data.regionprops_table)
 
 The list of available region properties is a subset of scikit-image's supported region properties. It defaults to
-:attr:`imctoolkit.SingleCellData.DEFAULT_REGION_PROPERTIES` and can be customized at instantiation using the
-:attr:`region_properties` attribute of :func:`imctoolkit.SingleCellData.__init__`.
+:attr:`imctoolkit.ImageSingleCellData.DEFAULT_REGION_PROPERTIES` and can be customized at instantiation using the
+:attr:`region_properties` attribute of :func:`imctoolkit.ImageSingleCellData.__init__`.
 
-All single-cell information accessible through :class:`imctoolkit.SingleCellData` can be exported to a number of data
-formats for further data analysis, for example:
+All single-cell information accessible through :class:`imctoolkit.ImageSingleCellData` can be exported to a number of
+data formats for further data analysis, for example:
 
 .. code-block::
 
@@ -96,7 +96,7 @@ To construct spatial cell graphs ("neighborhood graphs") from single-cell data, 
 .. note::
 
     The :attr:`data` parameter of :func:`imctoolkit.SpatialCellGraph.__init__` is not restricted to
-    :class:`imctoolkit.SingleCellData` instances, but also accepts e.g. pandas DataFrames.
+    :class:`imctoolkit.SpatialSingleCellData` instances, but also accepts e.g. pandas DataFrames.
 
 The resulting :class:`imctoolkit.SpatialCellGraph` objects hold the cell data and an adjacency matrix, and can be
 exported to popular graph data formats for further analysis, for example:

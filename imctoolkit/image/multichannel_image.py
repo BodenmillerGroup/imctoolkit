@@ -12,7 +12,7 @@ from xml.etree import ElementTree
 
 
 class MultichannelImage:
-    """Multi-channel image
+    """Functionality for processing multi-channel images
 
     :ivar data: raw image data, as :class:`xarray.DataArray` with dimensions ``(c, y, x)`` and, optionally, channel
         names as coordinate for the ``c`` dimension
@@ -22,7 +22,7 @@ class MultichannelImage:
         """
 
         :param data: raw image data, shape: ``(c, y, x)``
-        :type data: any type supported by xarray.DataArrays
+        :type data: DataArray-like
         :param channel_names: channel names
         """
         if not isinstance(data, xr.DataArray):
@@ -136,10 +136,10 @@ class MultichannelImage:
         not specified, the channel names are taken from the embedded OME-XML.
 
         :param path: path to the .tiff file
-        :type path: any type supported by tifffile.TiffFiles
+        :type path: tifffile.TiffFile path-argument
         :param panel: panel that maps channel indices to channel names. If specified, overrides channel names
             extracted from OME-XML and acts as a channel selector.
-        :type panel: optional, pandas DataFrame or any type supported by pandas.read_csv
+        :type panel: None, pandas.DataFrame or pandas.read_csv path-argument
         :param panel_channel_col: channel index column in panel
         :param panel_channel_name_col: channel name column in panel
         :param channel_names: channel names, matching the number of image channels. If specified for OME-TIFFs or

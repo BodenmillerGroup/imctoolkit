@@ -19,9 +19,9 @@ API reference
     :toctree: stubs
 
     imctoolkit.MultichannelImage
-    imctoolkit.SingleCellData
+    imctoolkit.ImageSingleCellData
     imctoolkit.SpatialCellGraph
-    imctoolkit.utils.image
+    imctoolkit.image.utils
 
 ..
     Indices and tables

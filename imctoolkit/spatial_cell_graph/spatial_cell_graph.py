@@ -4,7 +4,7 @@ import xarray as xr
 
 from typing import Collection
 
-from imctoolkit.single_cell_data import SingleCellData
+from imctoolkit.single_cell_data.spatial_single_cell_data import SpatialSingleCellData
 
 try:
     import networkx as nx
@@ -29,9 +29,9 @@ class SpatialCellGraph:
         """
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
-        :type data: SingleCellData, or any type supported by pandas.DataFrames
+        :type data: SingleCellData or DataFrame-like
         :param adj_mat: boolean adjacency matrix, shape: ``(cells, features)``
-        :type adj_mat: any type supported by xarray.DataArrays
+        :type adj_mat: DataArray-like
         """
         if not _skip_check_params:
             data, adj_mat = self._check_params(data, adj_mat)
@@ -40,7 +40,7 @@ class SpatialCellGraph:
 
     @staticmethod
     def _check_params(data, mat):
-        if isinstance(data, SingleCellData):
+        if isinstance(data, SpatialSingleCellData):
             data = data.to_dataframe()
         if not isinstance(data, pd.DataFrame):
             data = pd.DataFrame(data)
@@ -152,9 +152,9 @@ class SpatialCellGraph:
         """Constructs a new k-nearest cell neighbor graph
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
-        :type data: SingleCellData, or any type supported by pandas.DataFrames
+        :type data: SingleCellData or DataFrame-like
         :param dist_mat: symmetric distance matrix, shape: ``(cells, cells)``
-        :type dist_mat: any type supported by xarray.DataArrays
+        :type dist_mat: DataArray-like
         :param k: number of nearest neighbors for the graph construction
         :return: a directed k-nearest cell neighbor graph
         """
@@ -171,9 +171,9 @@ class SpatialCellGraph:
         """Constructs a new cell neighborhood graph by distance thresholding
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
-        :type data: SingleCellData, or any type supported by pandas.DataFrames
+        :type data: SingleCellData or DataFrame-like
         :param dist_mat: symmetric distance matrix, shape: ``(cells, cells)``
-        :type dist_mat: any type supported by xarray.DataArrays
+        :type dist_mat: DataArray-like
         :param dist_thres: distance hot_pixel_thres, (strictly) below which cells are considered neighbors
         :return: an undirected cell neighborhood graph
         """

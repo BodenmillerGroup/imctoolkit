@@ -53,3 +53,11 @@ In your virtual environment, install imctoolkit and its dependencies with::
 To also install optional dependencies, install imctoolkit with::
 
     pip install "git+https://github.com/BodenmillerGroup/imctoolkit#egg=imctoolkit[all]"
+
+
+Installing imctoolkit for R
+---------------------------
+
+Please refer to `imctoolkitr`_ for instructions how to install imctoolkit for R.
+
+.. _imctoolkitr: https://www.github.com/BodenmillerGroup/imctoolkitr
