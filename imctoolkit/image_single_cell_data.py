@@ -1,9 +1,11 @@
 import numpy as np
 import pandas as pd
+import tifffile
 import xarray as xr
 
 from enum import Enum
 from functools import cached_property
+from pathlib import Path
 from scipy.ndimage import distance_transform_edt
 from skimage import measure
 from typing import Any, Callable, Optional, Sequence
@@ -68,8 +70,8 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :param img: intensity image, shape: ``(c, y, x)``
         :type img: MultichannelImage or DataArray-like
-        :param mask: cell mask, shape: ``(y, x)``
-        :type mask: array-like
+        :param mask: (path to) cell mask of shape: ``(y, x)``
+        :type mask: mask file path or array-like
         :param channel_names: channel names
         :param region_properties: list of :class:`RegionProperties` to compute, defaults to
             :attr:`DEFAULT_REGION_PROPERTIES` when ``None``
@@ -81,6 +83,8 @@ class ImageSingleCellData(SpatialSingleCellData):
             img = img.data
         if not isinstance(img, xr.DataArray):
             img = xr.DataArray(data=img, dims=('c', 'y', 'x'))
+        if isinstance(mask, str) or isinstance(mask, Path):
+            mask = tifffile.imread(mask).squeeze()
         mask = np.asarray(mask)
         if img.dims != ('c', 'y', 'x'):
             raise ValueError(f'Invalid image dimensions: expected ("c", "y", "x"), got {img.dims}')
