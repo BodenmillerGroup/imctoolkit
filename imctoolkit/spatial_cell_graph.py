@@ -4,7 +4,7 @@ import xarray as xr
 
 from typing import Collection
 
-from imctoolkit.single_cell_data.spatial_single_cell_data import SpatialSingleCellData
+from imctoolkit.spatial_single_cell_data import SpatialSingleCellData
 
 try:
     import networkx as nx

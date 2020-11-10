@@ -8,9 +8,9 @@ from scipy.ndimage import distance_transform_edt
 from skimage import measure
 from typing import Any, Callable, Optional, Sequence
 
-from imctoolkit.utils import to_table
-from imctoolkit.image.multichannel_image import MultichannelImage
-from imctoolkit.single_cell_data.spatial_single_cell_data import SpatialSingleCellData
+from imctoolkit import utils
+from imctoolkit.multichannel_image import MultichannelImage
+from imctoolkit.spatial_single_cell_data import SpatialSingleCellData
 
 
 class ImageSingleCellData(SpatialSingleCellData):
@@ -137,7 +137,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :return: DataFrame (index: cell IDs, columns: channel names)
         """
-        return to_table(self.min_intensities)
+        return utils.to_table(self.min_intensities)
 
     @cached_property
     def max_intensities(self) -> xr.DataArray:
@@ -153,7 +153,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :return: DataFrame (index: cell IDs, columns: channel names)
         """
-        return to_table(self.max_intensities)
+        return utils.to_table(self.max_intensities)
 
     @cached_property
     def mean_intensities(self) -> xr.DataArray:
@@ -169,7 +169,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :return: DataFrame (index: cell IDs, columns: channel names)
         """
-        return to_table(self.mean_intensities)
+        return utils.to_table(self.mean_intensities)
 
     @cached_property
     def median_intensities(self) -> xr.DataArray:
@@ -185,7 +185,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :return: DataFrame (index: cell IDs, columns: channel names)
         """
-        return to_table(self.median_intensities)
+        return utils.to_table(self.median_intensities)
 
     @cached_property
     def std_intensities(self) -> xr.DataArray:
@@ -201,7 +201,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :return: DataFrame (index: cell IDs, columns: channel names)
         """
-        return to_table(self.std_intensities)
+        return utils.to_table(self.std_intensities)
 
     @cached_property
     def var_intensities(self) -> xr.DataArray:
@@ -217,7 +217,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :return: DataFrame (index: cell IDs, columns: channel names)
         """
-        return to_table(self.var_intensities)
+        return utils.to_table(self.var_intensities)
 
     @cached_property
     def regionprops(self) -> xr.DataArray:
@@ -244,7 +244,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         :return: DataFrame (index: cell IDs, columns: regionprops property names)
         """
-        return to_table(self.regionprops)
+        return utils.to_table(self.regionprops)
 
     def compute_cell_intensities(self, aggr: Callable[[np.ndarray], Any]) -> xr.DataArray:
         """Compute cell intensity values

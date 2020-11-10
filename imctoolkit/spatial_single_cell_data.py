@@ -7,7 +7,7 @@ from pathlib import Path
 from scipy.spatial import distance
 from typing import Union
 
-from imctoolkit.utils import to_table
+from imctoolkit import utils
 
 try:
     import anndata
@@ -78,11 +78,11 @@ class SpatialSingleCellData(ABC):
         cell_property_dataset = self.to_dataset(cell_properties=True)
         if cell_property_dataset is not None:
             for property_name, da in cell_property_dataset.data_vars:
-                df = pd.merge(df, to_table(da), left_index=True, right_index=True)
+                df = pd.merge(df, utils.to_table(da), left_index=True, right_index=True)
         cell_channel_property_dataset = self.to_dataset(cell_channel_properties=True)
         if cell_channel_property_dataset is not None:
             for property_name, da in cell_channel_property_dataset.data_vars:
-                df = pd.merge(df, to_table(da).add_prefix(f'{property_name}_'), left_index=True, right_index=True)
+                df = pd.merge(df, utils.to_table(da).add_prefix(f'{property_name}_'), left_index=True, right_index=True)
         df.columns.name = 'feature'
         return df
 
@@ -97,7 +97,7 @@ class SpatialSingleCellData(ABC):
         obs_data = None
         cell_property_dataset = self.to_dataset(cell_properties=True)
         if cell_property_dataset is not None:
-            obs_data = to_table(xr.concat(cell_property_dataset.data_vars.values(), 'property'))
+            obs_data = utils.to_table(xr.concat(cell_property_dataset.data_vars.values(), 'property'))
         layers = None
         cell_channel_property_dataset = self.to_dataset(cell_channel_properties=True)
         if cell_channel_property_dataset is not None:

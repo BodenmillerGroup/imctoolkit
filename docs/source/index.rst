@@ -21,7 +21,7 @@ API reference
     imctoolkit.MultichannelImage
     imctoolkit.ImageSingleCellData
     imctoolkit.SpatialCellGraph
-    imctoolkit.image.utils
+    imctoolkit.utils
 
 ..
     Indices and tables
