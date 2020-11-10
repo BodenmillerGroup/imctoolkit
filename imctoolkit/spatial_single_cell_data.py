@@ -77,11 +77,11 @@ class SpatialSingleCellData(ABC):
         df = pd.DataFrame(index=pd.Index(self.cell_ids, name='cell'))
         cell_property_dataset = self.to_dataset(cell_properties=True)
         if cell_property_dataset is not None:
-            for property_name, da in cell_property_dataset.data_vars:
+            for da in cell_property_dataset.data_vars.values():
                 df = pd.merge(df, utils.to_table(da), left_index=True, right_index=True)
         cell_channel_property_dataset = self.to_dataset(cell_channel_properties=True)
         if cell_channel_property_dataset is not None:
-            for property_name, da in cell_channel_property_dataset.data_vars:
+            for property_name, da in cell_channel_property_dataset.data_vars.items():
                 df = pd.merge(df, utils.to_table(da).add_prefix(f'{property_name}_'), left_index=True, right_index=True)
         df.columns.name = 'feature'
         return df
@@ -101,7 +101,7 @@ class SpatialSingleCellData(ABC):
         layers = None
         cell_channel_property_dataset = self.to_dataset(cell_channel_properties=True)
         if cell_channel_property_dataset is not None:
-            layers = {property_name: da.values for property_name, da in cell_channel_property_dataset.data_vars}
+            layers = {property_name: da.values for property_name, da in cell_channel_property_dataset.data_vars.items()}
         return anndata.AnnData(
             obs=pd.DataFrame(index=pd.Index(data=self.cell_ids.astype(str), name='cell'), data=obs_data),
             var=pd.DataFrame(index=pd.Index(data=self.channel_names, name='channel')),
