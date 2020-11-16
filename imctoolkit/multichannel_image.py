@@ -86,7 +86,7 @@ class MultichannelImage:
             return cls.read_imc_txt(path, **kwargs)
         elif path_suffix == '.mcd':
             return cls.read_imc_mcd(path, **kwargs)
-        elif path_suffix == '.tif' or path.suffix == '.tiff':
+        elif path_suffix == '.tif' or path_suffix == '.tiff':
             return cls.read_tiff(path, **kwargs)
         raise ValueError(f'Unsupported file extension: {path_suffix}')
 
