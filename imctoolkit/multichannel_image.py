@@ -168,7 +168,7 @@ class MultichannelImage:
             if len(channel_elems) == img_data.sizes['c']:
                 channel_elems.sort(key=lambda channel_elem: channel_elem.attrib['ID'])
                 img_data.coords['c'] = [channel_elem.attrib[ome_channel_name_attrib] for channel_elem in channel_elems]
-        else:
+        elif channel_names is not None:
             img_data.coords['c'] = channel_names
         if channel_names is not None:
             img_data = img_data.loc[channel_names, :, :]
