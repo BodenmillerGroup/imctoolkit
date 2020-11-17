@@ -229,9 +229,9 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         For a list of computed properties, see :attr:`region_properties`.
 
-        The properties ``'label'`` and ``'centroid'`` are always computed.
+        The properties ``'label'`` and ``'centroid'`` are always computed (labels are used as cell coordinate).
 
-        :return: DataArray with coordinates ``(cell_id, property_name)``
+        :return: DataArray with coordinates ``(cell_id=label, property_name)``
         """
         properties = ['label', 'centroid'] + [rp.value for rp in self.region_properties]
         regionprops_dict = measure.regionprops_table(self.mask, properties=properties)
@@ -244,9 +244,9 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         For a list of computed properties, see :attr:`region_properties`.
 
-        The properties ``'label'`` and ``'centroid'`` are always computed.
+        The properties ``'label'`` and ``'centroid'`` are always computed (labels are used as cell index).
 
-        :return: DataFrame (index: cell IDs, columns: regionprops property names)
+        :return: DataFrame (index: cell IDs=labels, columns: regionprops property names)
         """
         return utils.to_table(self.regionprops)
 
