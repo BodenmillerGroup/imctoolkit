@@ -262,7 +262,7 @@ class ImageSingleCellData(SpatialSingleCellData):
             arr.loc[:, channel_name] = [aggr(channel_img[self.mask == cell_id]) for cell_id in self.cell_ids]
         return arr
 
-    def compute_border_distances(self) -> xr.DataArray:
+    def compute_cell_border_distances(self) -> xr.DataArray:
         """Compute the pairwise Euclidean distances between cell borders
 
         :return: symmetric border distance matrix
