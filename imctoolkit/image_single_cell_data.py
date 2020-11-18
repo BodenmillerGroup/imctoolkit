@@ -8,7 +8,7 @@ from functools import cached_property
 from pathlib import Path
 from scipy.ndimage import distance_transform_edt
 from skimage import measure
-from typing import Any, Callable, Optional, Sequence
+from typing import Any, Callable, Optional, Sequence, Union
 
 from imctoolkit import utils
 from imctoolkit.multichannel_image import MultichannelImage
@@ -63,6 +63,8 @@ class ImageSingleCellData(SpatialSingleCellData):
         RegionProperties.MINOR_AXIS_LENGTH,
         RegionProperties.ORIENTATION,
     ]  #: List of :class:`RegionProperties` computed by default, see :func:`__init__`
+
+    _REGIONPROPS_CENTROID_COLUMNS = ['centroid-0', 'centroid-1']
 
     def __init__(self, img, mask, channel_names: Optional[Sequence[str]] = None,
                  region_properties: Optional[Sequence[RegionProperties]] = None):
@@ -125,7 +127,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
     @property
     def cell_centroids(self) -> xr.DataArray:
-        return self.regionprops.loc[:, ['centroid-0', 'centroid-1']]
+        return self._regionprops_with_centroids.loc[:, self._REGIONPROPS_CENTROID_COLUMNS]
 
     @cached_property
     def min_intensities(self) -> xr.DataArray:
@@ -224,19 +226,21 @@ class ImageSingleCellData(SpatialSingleCellData):
         return utils.to_table(self.var_intensities)
 
     @cached_property
+    def _regionprops_with_centroids(self) -> xr.DataArray:
+        regionprops_properties = ['label', 'centroid'] + [rp.value for rp in self.region_properties]
+        regionprops_dict = measure.regionprops_table(self.mask, properties=regionprops_properties)
+        df = pd.DataFrame(regionprops_dict, index=regionprops_dict.pop('label'))
+        return xr.DataArray(data=df, dims=('cell', 'property'))
+
+    @property
     def regionprops(self) -> xr.DataArray:
         """Region properties
 
         For a list of computed properties, see :attr:`region_properties`.
 
-        The properties ``'label'`` and ``'centroid'`` are always computed (labels are used as cell coordinate).
-
-        :return: DataArray with coordinates ``(cell_id=label, property_name)``
+        :return: DataArray with coordinates ``(cell_id, property_name)``
         """
-        properties = ['label', 'centroid'] + [rp.value for rp in self.region_properties]
-        regionprops_dict = measure.regionprops_table(self.mask, properties=properties)
-        df = pd.DataFrame(regionprops_dict, index=regionprops_dict.pop('label'))
-        return xr.DataArray(data=df, dims=('cell', 'property'))
+        return self._regionprops_with_centroids.drop_sel(property=self._REGIONPROPS_CENTROID_COLUMNS)
 
     @property
     def regionprops_table(self) -> pd.DataFrame:
@@ -244,9 +248,7 @@ class ImageSingleCellData(SpatialSingleCellData):
 
         For a list of computed properties, see :attr:`region_properties`.
 
-        The properties ``'label'`` and ``'centroid'`` are always computed (labels are used as cell index).
-
-        :return: DataFrame (index: cell IDs=labels, columns: regionprops property names)
+        :return: DataFrame (index: cell IDs, columns: regionprops property names)
         """
         return utils.to_table(self.regionprops)
 
@@ -277,23 +279,32 @@ class ImageSingleCellData(SpatialSingleCellData):
         return xr.DataArray(data=dist_mat, dims=('cell_i', 'cell_j'),
                             coords={'cell_i': self.cell_ids, 'cell_j': self.cell_ids})
 
-    def to_dataset(self, cell_properties: bool = False, cell_channel_properties: bool = False) -> xr.Dataset:
+    def to_dataset(self, cell_properties: Union[bool, Sequence[str]] = False,
+                   cell_channel_properties: Union[bool, Sequence[str]] = False) -> xr.Dataset:
         if not cell_properties and not cell_channel_properties:
             raise ValueError('At least one of cell_properties, cell_channel_properties must be specified')
         data_vars = {}
         if cell_properties:
-            data_vars = {
-                **data_vars,
-                'regionprops': self.regionprops,
-            }
+            if isinstance(cell_properties, Sequence):
+                for cell_property in cell_properties:
+                    data_vars[cell_property] = getattr(self, cell_property)
+            else:
+                data_vars = {
+                    **data_vars,
+                    'regionprops': self.regionprops,
+                }
         if cell_channel_properties:
-            data_vars = {
-                **data_vars,
-                'min_intensities': self.min_intensities,
-                'max_intensities': self.max_intensities,
-                'mean_intensities': self.mean_intensities,
-                'median_intensities': self.median_intensities,
-                'std_intensities': self.std_intensities,
-                'var_intensities': self.var_intensities,
-            }
+            if isinstance(cell_channel_properties, Sequence):
+                for cell_channel_property in cell_channel_properties:
+                    data_vars[cell_channel_property] = getattr(self, cell_channel_property)
+            else:
+                data_vars = {
+                    **data_vars,
+                    'min_intensities': self.min_intensities,
+                    'max_intensities': self.max_intensities,
+                    'mean_intensities': self.mean_intensities,
+                    'median_intensities': self.median_intensities,
+                    'std_intensities': self.std_intensities,
+                    'var_intensities': self.var_intensities,
+                }
         return xr.Dataset(data_vars=data_vars)

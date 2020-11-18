@@ -72,7 +72,7 @@ data formats for further data analysis, for example:
 
 .. code-block::
 
-    data.to_anndata().write('/path/to/data.h5ad')
+    data.to_anndata(cell_properties=True, cell_channel_properties=True).write('/path/to/data.h5ad')
 
 .. warning::
 
@@ -91,7 +91,7 @@ To construct spatial cell graphs ("neighborhood graphs") from single-cell data, 
     from imctoolkit import SpatialCellGraph
 
     dist_mat = data.compute_border_distances()
-    graph = SpatialCellGraph.construct_dist_graph(data, dist_mat, 15)
+    graph = SpatialCellGraph.construct_dist_graph(data, dist_mat, 15, cell_channel_properties=True)
 
 .. note::
 

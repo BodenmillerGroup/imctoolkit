@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 
-from typing import Collection
+from typing import Collection, Sequence, Union
 
 from imctoolkit.spatial_single_cell_data import SpatialSingleCellData
 
@@ -25,23 +25,29 @@ class SpatialCellGraph:
         coordinates ``(cell IDs, cell IDs)``. A cell `j` is a neighbor of cell `i`, iff ``adj_mat[i, j] == True``.
     """
 
-    def __init__(self, data, adj_mat, _skip_check_params: bool = False):
+    def __init__(self, data, adj_mat, cell_properties: Union[bool, Sequence[str]] = False,
+                 cell_channel_properties: Union[bool, Sequence[str]] = False, _skip_data_preparation: bool = False):
         """
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
         :type data: SingleCellData or DataFrame-like
         :param adj_mat: boolean adjacency matrix, shape: ``(cells, features)``
         :type adj_mat: DataArray-like
+        :param cell_properties: list of cell properties (e.g. regionprops) to include as node attributes when using a
+            SingleCellData object for :paramref:`data`; set to ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include as node
+            attributes when using a SingleCellData object for :paramref:`data`; set to ``True`` to include all
         """
-        if not _skip_check_params:
-            data, adj_mat = self._check_params(data, adj_mat)
+        if not _skip_data_preparation:
+            data, adj_mat = self._prepare_data(data, adj_mat, cell_properties, cell_channel_properties)
         self.data = data
         self.adj_mat = adj_mat
 
     @staticmethod
-    def _check_params(data, mat):
+    def _prepare_data(data, mat, cell_properties: Union[bool, Sequence[str]],
+                      cell_channel_properties: Union[bool, Sequence[str]]):
         if isinstance(data, SpatialSingleCellData):
-            data = data.to_dataframe()
+            data = data.to_dataframe(cell_properties=cell_properties, cell_channel_properties=cell_channel_properties)
         if not isinstance(data, pd.DataFrame):
             data = pd.DataFrame(data)
         if not isinstance(mat, xr.DataArray):
@@ -148,7 +154,8 @@ class SpatialCellGraph:
         return SpatialCellGraph(data, dataset['adj_mat'])
 
     @classmethod
-    def construct_knn_graph(cls, data, dist_mat, k: int) -> 'SpatialCellGraph':
+    def construct_knn_graph(cls, data, dist_mat, k: int, cell_properties: Union[bool, Sequence[str]] = False,
+                            cell_channel_properties: Union[bool, Sequence[str]] = False) -> 'SpatialCellGraph':
         """Constructs a new k-nearest cell neighbor graph
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
@@ -156,18 +163,24 @@ class SpatialCellGraph:
         :param dist_mat: symmetric distance matrix, shape: ``(cells, cells)``
         :type dist_mat: DataArray-like
         :param k: number of nearest neighbors for the graph construction
+        :param cell_properties: list of cell properties (e.g. regionprops) to include as node attributes; set to
+            ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include  as node
+            attributes; set to ``True`` to include all
         :return: a directed k-nearest cell neighbor graph
         """
-        data, dist_mat = cls._check_params(data, dist_mat)
+        data, dist_mat = cls._prepare_data(data, dist_mat, cell_properties, cell_channel_properties)
         adj_mat = xr.zeros_like(dist_mat, dtype='bool')
         knn_indices = np.argpartition(dist_mat.values, k + 1, axis=1)[:, :(k + 1)]
         for current_index, current_knn_indices in enumerate(knn_indices):
             adj_mat[current_index, current_knn_indices] = True
         np.fill_diagonal(adj_mat.values, False)
-        return SpatialCellGraph(data, adj_mat, _skip_check_params=True)
+        return SpatialCellGraph(data, adj_mat, _skip_data_preparation=True)
 
     @classmethod
-    def construct_dist_graph(cls, data, dist_mat, dist_thres: float) -> 'SpatialCellGraph':
+    def construct_dist_graph(cls, data, dist_mat, dist_thres: float,
+                             cell_properties: Union[bool, Sequence[str]] = False,
+                             cell_channel_properties: Union[bool, Sequence[str]] = False) -> 'SpatialCellGraph':
         """Constructs a new cell neighborhood graph by distance thresholding
 
         :param data: single-cell data (rows: cell IDs, columns: feature names)
@@ -175,9 +188,13 @@ class SpatialCellGraph:
         :param dist_mat: symmetric distance matrix, shape: ``(cells, cells)``
         :type dist_mat: DataArray-like
         :param dist_thres: distance hot_pixel_thres, (strictly) below which cells are considered neighbors
+        :param cell_properties: list of cell properties (e.g. regionprops) to include as node attributes; set to
+            ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include  as node
+            attributes; set to ``True`` to include all
         :return: an undirected cell neighborhood graph
         """
-        data, dist_mat = cls._check_params(data, dist_mat)
+        data, dist_mat = cls._prepare_data(data, dist_mat, cell_properties, cell_channel_properties)
         adj_mat = xr.DataArray(dist_mat < dist_thres)
         np.fill_diagonal(adj_mat.values, False)
-        return SpatialCellGraph(data, adj_mat, _skip_check_params=True)
+        return SpatialCellGraph(data, adj_mat, _skip_data_preparation=True)

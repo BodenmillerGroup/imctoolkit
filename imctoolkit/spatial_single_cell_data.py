@@ -5,7 +5,7 @@ import xarray as xr
 from abc import ABC, abstractmethod
 from pathlib import Path
 from scipy.spatial import distance
-from typing import Union
+from typing import Optional, Sequence, Union
 
 from imctoolkit import utils
 
@@ -54,53 +54,63 @@ class SpatialSingleCellData(ABC):
         pass
 
     @abstractmethod
-    def to_dataset(self, cell_properties: bool = False, cell_channel_properties: bool = False) -> xr.Dataset:
+    def to_dataset(self, cell_properties: Union[bool, Sequence[str]] = False,
+                   cell_channel_properties: Union[bool, Sequence[str]] = False) -> xr.Dataset:
         """Returns an :class:`xarray.Dataset` representation of the current instance
 
         At least one of :paramref:`cell_properties` or :paramref:`cell_channel_properties` has to be ``True``
 
-        :param cell_properties: include cell properties (e.g. regionprops)
-        :param cell_channel_properties: include cell channel properties (e.g. intensity values)
+        :param cell_properties: list of cell properties (e.g. regionprops) to include; set to ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include; set to
+            ``True`` to include all
         :return: Dataset with cell ID, channel name and/or property name as coordinates
         """
         pass
 
-    def to_dataframe(self) -> pd.DataFrame:
+    def to_dataframe(self, cell_properties: Union[bool, Sequence[str]] = False,
+                     cell_channel_properties: Union[bool, Sequence[str]] = False) -> pd.DataFrame:
         """Returns a :class:`pandas.DataFrame` representation of the current instance
 
         Column names for cell channel properties (e.g. intensity values) are prefixed by the property name, e.g. a
         ``mean_intensities`` property would be included as ``'mean_intensities_{channel_name}'``. Column names for
         cell properties (e.g. regionprops) are not prefixed.
 
+        :param cell_properties: list of cell properties (e.g. regionprops) to include; set to ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include; set to
+            ``True`` to include all
         :return: DataFrame (index: cell IDs, columns: see description)
         """
         df = pd.DataFrame(index=pd.Index(self.cell_ids, name='cell'))
-        cell_property_dataset = self.to_dataset(cell_properties=True)
-        if cell_property_dataset is not None:
+        if cell_properties:
+            cell_property_dataset = self.to_dataset(cell_properties=cell_properties)
             for da in cell_property_dataset.data_vars.values():
                 df = pd.merge(df, utils.to_table(da), left_index=True, right_index=True)
-        cell_channel_property_dataset = self.to_dataset(cell_channel_properties=True)
-        if cell_channel_property_dataset is not None:
+        if cell_channel_properties:
+            cell_channel_property_dataset = self.to_dataset(cell_channel_properties=cell_channel_properties)
             for property_name, da in cell_channel_property_dataset.data_vars.items():
                 df = pd.merge(df, utils.to_table(da).add_prefix(f'{property_name}_'), left_index=True, right_index=True)
         df.columns.name = 'feature'
         return df
 
-    def to_anndata(self) -> 'anndata.AnnData':
+    def to_anndata(self, cell_properties: Union[bool, Sequence[str]] = False,
+                   cell_channel_properties: Union[bool, Sequence[str]] = False) -> 'anndata.AnnData':
         """Returns an :class:`anndata.AnnData` representation of the current instance
 
+        :param cell_properties: list of cell properties (e.g. regionprops) to include; set to ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include; set to
+            ``True`` to include all
         :return: AnnData object, in which cell channel properties (e.g. intensity values) are stored as layers and cell
             properties (e.g. regionprops) are stored as observations
         """
         if anndata is None:
             raise RuntimeError('anndata is not installed')
         obs_data = None
-        cell_property_dataset = self.to_dataset(cell_properties=True)
-        if cell_property_dataset is not None:
+        if cell_properties:
+            cell_property_dataset = self.to_dataset(cell_properties=cell_properties)
             obs_data = utils.to_table(xr.concat(cell_property_dataset.data_vars.values(), 'property'))
         layers = None
-        cell_channel_property_dataset = self.to_dataset(cell_channel_properties=True)
-        if cell_channel_property_dataset is not None:
+        if cell_channel_properties:
+            cell_channel_property_dataset = self.to_dataset(cell_channel_properties=cell_channel_properties)
             layers = {property_name: da.values for property_name, da in cell_channel_property_dataset.data_vars.items()}
         return anndata.AnnData(
             obs=pd.DataFrame(index=pd.Index(data=self.cell_ids.astype(str), name='cell'), data=obs_data),
