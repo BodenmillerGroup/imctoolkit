@@ -127,9 +127,9 @@ class MultichannelImage:
         return MultichannelImage(img_data, channel_names=getattr(acquisition_data, channel_names_attr))
 
     @staticmethod
-    def read_tiff(path, panel=None, panel_channel_col: str = 'channel', panel_channel_name_col: str = 'channel_name',
-                  channel_names: Optional[Sequence[str]] = None,
-                  ome_channel_name_attrib: str = 'Name') -> 'MultichannelImage':
+    def read_tiff(path, panel=None, panel_channel_index_col: Optional[str] = None,
+                  panel_channel_name_col: str = 'channel_name', channel_names: Optional[Sequence[str]] = None,
+                  ome_channel_name_attr: str = 'Name') -> 'MultichannelImage':
         """Creates a new :class:`MultichannelImage` from the specified TIFF/OME-TIFF file
 
         Uses :class:`tifffile.TiffFile` for reading .tiff files. When reading an OME-TIFF file and :paramref:`panel` is
@@ -140,11 +140,11 @@ class MultichannelImage:
         :param panel: panel that maps channel indices to channel names. If specified, overrides channel names
             extracted from OME-XML and acts as a channel selector.
         :type panel: None, pandas.DataFrame or pandas.read_csv path-argument
-        :param panel_channel_col: channel index column in panel
+        :param panel_channel_index_col: channel index column in panel, or None for defaulting to `range(n_channels)`
         :param panel_channel_name_col: channel name column in panel
         :param channel_names: channel names, matching the number of image channels. If specified for OME-TIFFs or
             together with :paramref:`panel`, acts as a channel selector.
-        :param ome_channel_name_attrib: name of the OME-XML Channel element attribute from which the channel names will
+        :param ome_channel_name_attr: name of the OME-XML Channel element attribute from which the channel names will
             be taken, see https://www.openmicroscopy.org/Schemas/Documentation/Generated/OME-2016-06/ome.html.
         :return: a new :class:`MultichannelImage` instance
         """
@@ -154,20 +154,21 @@ class MultichannelImage:
         if panel is not None:
             if not isinstance(panel, pd.DataFrame):
                 panel = pd.read_csv(panel)
-            if panel_channel_col not in panel.columns:
-                raise ValueError(f'Column {panel_channel_col} not found in panel')
+            if panel_channel_index_col is not None and panel_channel_index_col not in panel.columns:
+                raise ValueError(f'Column {panel_channel_index_col} not found in panel')
             if panel_channel_name_col not in panel.columns:
                 raise ValueError(f'Column {panel_channel_name_col} not found in panel')
-            panel = panel.loc[panel[panel_channel_col].notna(), [panel_channel_col, panel_channel_name_col]]
-            img_data = img_data[panel[panel_channel_col].astype(int), :, :]
-            img_data.coords['c'] = panel[panel_channel_name_col].astype(str)
+            if panel_channel_index_col is not None:
+                panel = panel.loc[panel[panel_channel_index_col].notna(), :]
+                img_data = img_data[panel[panel_channel_index_col].astype(int).values, :, :]
+            img_data.coords['c'] = panel[panel_channel_name_col].astype(str).values
         elif ome_metadata is not None:
             element_tree = ElementTree.fromstring(ome_metadata)
             ome_namespaces = {'ome': 'http://www.openmicroscopy.org/Schemas/OME/2016-06'}
             channel_elems = element_tree.findall('./ome:Image/ome:Pixels/ome:Channel', namespaces=ome_namespaces)
             if len(channel_elems) == img_data.sizes['c']:
                 channel_elems.sort(key=lambda channel_elem: channel_elem.attrib['ID'])
-                img_data.coords['c'] = [channel_elem.attrib[ome_channel_name_attrib] for channel_elem in channel_elems]
+                img_data.coords['c'] = [channel_elem.attrib[ome_channel_name_attr] for channel_elem in channel_elems]
         elif channel_names is not None:
             img_data.coords['c'] = channel_names
         if channel_names is not None:
