@@ -167,7 +167,7 @@ class MultichannelImage:
             ome_namespaces = {'ome': 'http://www.openmicroscopy.org/Schemas/OME/2016-06'}
             channel_elems = element_tree.findall('./ome:Image/ome:Pixels/ome:Channel', namespaces=ome_namespaces)
             if len(channel_elems) == img_data.sizes['c']:
-                channel_elems.sort(key=lambda channel_elem: channel_elem.attrib['ID'])
+                channel_elems.sort(key=lambda channel_elem: int(channel_elem.attrib['ID'].rpartition(':')[-1]))
                 img_data.coords['c'] = [channel_elem.attrib[ome_channel_name_attr] for channel_elem in channel_elems]
         elif channel_names is not None:
             img_data.coords['c'] = channel_names
