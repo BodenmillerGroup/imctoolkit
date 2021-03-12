@@ -2,4 +2,4 @@
 
 Python package for common tasks in processing segmented multi-channel images
 
-Documentation is available at https://imctoolkit.github.io
+Documentation is available at https://bodenmillergroup.github.io/imctoolkit

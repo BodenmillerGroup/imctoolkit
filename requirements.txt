@@ -1,13 +1,6 @@
-anndata
-fcswrite
 imctools
-networkx
 numpy
-opencv-python
 pandas
-pytest
-pytest-datadir
-python-igraph
 scikit-image
 scipy
 tifffile
