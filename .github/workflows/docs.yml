@@ -3,18 +3,19 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 jobs:
-  aoi-docs:
-    name: API documentation
+  docs:
+    name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main
+      - name: Check out main
         uses: actions/checkout@v2
-      - name: Checkout gh-pages
+      - name: Check out gh-pages
         uses: actions/checkout@v2
         with:
           ref: gh-pages
-          path: 'gh-pages'
+          path: gh-pages
       - name: Build documentation
         uses: ammaraskar/sphinx-action@0.4
         with:

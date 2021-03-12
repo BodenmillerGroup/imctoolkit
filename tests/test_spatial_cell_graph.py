@@ -1,2 +1,0 @@
-class TestSpatialCellGraph:
-    pass  # TODO

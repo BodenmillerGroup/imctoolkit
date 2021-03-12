@@ -1,2 +1,0 @@
-class TestImage:
-    pass  # TODO
