@@ -38,7 +38,9 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="imctoolkit.utils" href="imctoolkit.utils.html" />
+    <link rel="prev" title="imctoolkit.ImageSingleCellData" href="imctoolkit.ImageSingleCellData.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,6 +92,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.MultichannelImage.html">imctoolkit.MultichannelImage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.ImageSingleCellData.html">imctoolkit.ImageSingleCellData</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">imctoolkit.SpatialCellGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.utils.html">imctoolkit.utils</a></li>
 </ul>
 
             
@@ -159,6 +168,211 @@
             
   <div class="section" id="imctoolkit-spatialcellgraph">
 <h1>imctoolkit.SpatialCellGraph<a class="headerlink" href="#imctoolkit-spatialcellgraph" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="imctoolkit.SpatialCellGraph">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">SpatialCellGraph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_channel_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_data_preparation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spatial cell graph constructed from single-cell data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – single-cell data, as <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>, with cell IDs as index and feature names as columns</p></li>
+<li><p><strong>adj_mat</strong> – boolean adjacency matrix, as <code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> with shape <code class="docutils literal notranslate"><span class="pre">(cell_i,</span> <span class="pre">cell_j)</span></code> and
+coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">cell</span> <span class="pre">IDs)</span></code>. A cell <cite>j</cite> is a neighbor of cell <cite>i</cite>, iff <code class="docutils literal notranslate"><span class="pre">adj_mat[i,</span> <span class="pre">j]</span> <span class="pre">==</span> <span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adj_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_channel_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip_data_preparation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.params.data"></span><strong>data</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.params.data">¶</a> (<em>SingleCellData</em><em> or </em><em>DataFrame-like</em>) – single-cell data (rows: cell IDs, columns: feature names)</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.params.adj_mat"></span><strong>adj_mat</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.params.adj_mat">¶</a> (<em>DataArray-like</em>) – boolean adjacency matrix, shape: <code class="docutils literal notranslate"><span class="pre">(cells,</span> <span class="pre">features)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.params.cell_properties"></span><strong>cell_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.params.cell_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell properties (e.g. regionprops) to include as node attributes when using a
+SingleCellData object for <code class="xref py py-paramref docutils literal notranslate"><span class="pre">data</span></code>; set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.params.cell_channel_properties"></span><strong>cell_channel_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.params.cell_channel_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell channel properties (e.g. intensity values) to include as node
+attributes when using a SingleCellData object for <code class="xref py py-paramref docutils literal notranslate"><span class="pre">data</span></code>; set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.num_cells">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">num_cells</span></code><a class="headerlink" href="#imctoolkit.SpatialCellGraph.num_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of cells</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.cell_ids">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">cell_ids</span></code><a class="headerlink" href="#imctoolkit.SpatialCellGraph.cell_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cell IDs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Collection</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.num_features">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">num_features</span></code><a class="headerlink" href="#imctoolkit.SpatialCellGraph.num_features" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of features</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.feature_names">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">feature_names</span></code><a class="headerlink" href="#imctoolkit.SpatialCellGraph.feature_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Feature names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.is_undirected">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">is_undirected</span></code><a class="headerlink" href="#imctoolkit.SpatialCellGraph.is_undirected" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">True</span></code>, if <code class="xref py py-attr docutils literal notranslate"><span class="pre">adj_mat</span></code> is symmetric, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.to_dataset">
+<code class="sig-name descname"><span class="pre">to_dataset</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph.to_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an <code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> representation of the current instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dataset with <code class="xref py py-attr docutils literal notranslate"><span class="pre">data</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">adj_mat</span></code> as members and <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">feature</span> <span class="pre">names)</span></code> as
+coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.to_networkx">
+<code class="sig-name descname"><span class="pre">to_networkx</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weight_mat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">create_using</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph.to_networkx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <code class="xref py py-class docutils literal notranslate"><span class="pre">networkx.Graph</span></code> representation of the current instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.to_networkx.params.weight_mat"></span><strong>weight_mat</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.to_networkx.params.weight_mat">¶</a> – optional edge weight matrix, will be multiplied by <code class="xref py py-attr docutils literal notranslate"><span class="pre">adj_mat</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.to_networkx.params.create_using"></span><strong>create_using</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.to_networkx.params.create_using">¶</a> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">networkx.from_numpy_array()</span></code>) – type of graph to create, defaults to <code class="xref py py-class docutils literal notranslate"><span class="pre">networkx.Graph</span></code> for undirected graphs and
+<code class="xref py py-class docutils literal notranslate"><span class="pre">networkx.DiGraph</span></code> for directed graphs when <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Graph</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Graph or DiGraph with cell IDs as node labels and features as node attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.to_igraph">
+<code class="sig-name descname"><span class="pre">to_igraph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph.to_igraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an <code class="xref py py-class docutils literal notranslate"><span class="pre">igraph.Graph</span></code> representation of the current instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><span class="target" id="imctoolkit.SpatialCellGraph.to_igraph.params.mode"></span><strong>mode</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.to_igraph.params.mode">¶</a> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">igraph.Graph.Adjacency()</span></code>) – graph mode, defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">igraph.ADJ_UNDIRECTED</span></code> for undirected graphs and
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">igraph.ADJ_DIRECTED</span></code> for directed graphs when <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Graph with cell IDs and features as vertex attributes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.load_dataset">
+<em class="property"><span class="pre">static</span> </em><code class="sig-name descname"><span class="pre">load_dataset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph.load_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new <a class="reference internal" href="#imctoolkit.SpatialCellGraph" title="imctoolkit.SpatialCellGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCellGraph</span></code></a> from its dataset representation, see</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><span class="target" id="imctoolkit.SpatialCellGraph.load_dataset.params.dataset"></span><strong>dataset</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.load_dataset.params.dataset">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code>) – Dataset of the same format as created by <a class="reference internal" href="#imctoolkit.SpatialCellGraph.to_dataset" title="imctoolkit.SpatialCellGraph.to_dataset"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_dataset()</span></code></a></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCellGraph</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a new <a class="reference internal" href="#imctoolkit.SpatialCellGraph" title="imctoolkit.SpatialCellGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCellGraph</span></code></a> instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.construct_knn_graph">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">construct_knn_graph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_channel_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph.construct_knn_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a new k-nearest cell neighbor graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_knn_graph.params.data"></span><strong>data</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_knn_graph.params.data">¶</a> (<em>SingleCellData</em><em> or </em><em>DataFrame-like</em>) – single-cell data (rows: cell IDs, columns: feature names)</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_knn_graph.params.dist_mat"></span><strong>dist_mat</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_knn_graph.params.dist_mat">¶</a> (<em>DataArray-like</em>) – symmetric distance matrix, shape: <code class="docutils literal notranslate"><span class="pre">(cells,</span> <span class="pre">cells)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_knn_graph.params.k"></span><strong>k</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_knn_graph.params.k">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – number of nearest neighbors for the graph construction</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_knn_graph.params.cell_properties"></span><strong>cell_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_knn_graph.params.cell_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell properties (e.g. regionprops) to include as node attributes; set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_knn_graph.params.cell_channel_properties"></span><strong>cell_channel_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_knn_graph.params.cell_channel_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell channel properties (e.g. intensity values) to include  as node
+attributes; set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCellGraph</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a directed k-nearest cell neighbor graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.SpatialCellGraph.construct_dist_graph">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">construct_dist_graph</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_mat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dist_thres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_channel_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.SpatialCellGraph.construct_dist_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a new cell neighborhood graph by distance thresholding</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_dist_graph.params.data"></span><strong>data</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_dist_graph.params.data">¶</a> (<em>SingleCellData</em><em> or </em><em>DataFrame-like</em>) – single-cell data (rows: cell IDs, columns: feature names)</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_dist_graph.params.dist_mat"></span><strong>dist_mat</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_dist_graph.params.dist_mat">¶</a> (<em>DataArray-like</em>) – symmetric distance matrix, shape: <code class="docutils literal notranslate"><span class="pre">(cells,</span> <span class="pre">cells)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_dist_graph.params.dist_thres"></span><strong>dist_thres</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_dist_graph.params.dist_thres">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – distance hot_pixel_thres, (strictly) below which cells are considered neighbors</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_dist_graph.params.cell_properties"></span><strong>cell_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_dist_graph.params.cell_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell properties (e.g. regionprops) to include as node attributes; set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+<li><p><span class="target" id="imctoolkit.SpatialCellGraph.construct_dist_graph.params.cell_channel_properties"></span><strong>cell_channel_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.SpatialCellGraph.construct_dist_graph.params.cell_channel_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell channel properties (e.g. intensity values) to include  as node
+attributes; set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">SpatialCellGraph</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an undirected cell neighborhood graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -166,6 +380,10 @@
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="imctoolkit.utils.html" class="btn btn-neutral float-right" title="imctoolkit.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="imctoolkit.ImageSingleCellData.html" class="btn btn-neutral float-left" title="imctoolkit.ImageSingleCellData" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

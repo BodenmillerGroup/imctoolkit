@@ -38,7 +38,9 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="imctoolkit.SpatialCellGraph" href="imctoolkit.SpatialCellGraph.html" />
+    <link rel="prev" title="imctoolkit.MultichannelImage" href="imctoolkit.MultichannelImage.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,6 +92,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.MultichannelImage.html">imctoolkit.MultichannelImage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">imctoolkit.ImageSingleCellData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.SpatialCellGraph.html">imctoolkit.SpatialCellGraph</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.utils.html">imctoolkit.utils</a></li>
 </ul>
 
             
@@ -159,6 +168,582 @@
             
   <div class="section" id="imctoolkit-imagesinglecelldata">
 <h1>imctoolkit.ImageSingleCellData<a class="headerlink" href="#imctoolkit-imagesinglecelldata" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="imctoolkit.ImageSingleCellData">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">ImageSingleCellData</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Single-cell data accessor for multi-channel images</p>
+<dl class="field-list simple">
+<dt class="field-odd">Variables</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – intensity image, as <code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> with dimensions <code class="docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">y,</span> <span class="pre">x)</span></code> and, optionally, channel
+names as coordinate for the <code class="docutils literal notranslate"><span class="pre">c</span></code> dimension</p></li>
+<li><p><strong>mask</strong> – cell mask, as <code class="xref py py-class docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">x)</span></code>, where <code class="docutils literal notranslate"><span class="pre">0</span></code> indicates background pixels and
+non-zero pixels indicate the cell ID</p></li>
+<li><p><strong>region_properties</strong> – list of <a class="reference internal" href="#imctoolkit.ImageSingleCellData.RegionProperties" title="imctoolkit.ImageSingleCellData.RegionProperties"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegionProperties</span></code></a> computed by the current instance, see <a class="reference internal" href="#imctoolkit.ImageSingleCellData.regionprops" title="imctoolkit.ImageSingleCellData.regionprops"><code class="xref py py-func docutils literal notranslate"><span class="pre">regionprops()</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties">
+<em class="property"><span class="pre">class</span> </em><code class="sig-name descname"><span class="pre">RegionProperties</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enumeration of regionprops properties supported by this class, see
+<a class="reference external" href="https://scikit-image.org/docs/0.17.x/api/skimage.measure.html#skimage.measure.regionprops">https://scikit-image.org/docs/0.17.x/api/skimage.measure.html#skimage.measure.regionprops</a></p>
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.AREA">
+<code class="sig-name descname"><span class="pre">AREA</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'area'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.AREA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.BBOX">
+<code class="sig-name descname"><span class="pre">BBOX</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'bbox'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.BBOX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.BBOX_AREA">
+<code class="sig-name descname"><span class="pre">BBOX_AREA</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'bbox_area'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.BBOX_AREA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.CONVEX_AREA">
+<code class="sig-name descname"><span class="pre">CONVEX_AREA</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'convex_area'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.CONVEX_AREA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.CONVEX_IMAGE">
+<code class="sig-name descname"><span class="pre">CONVEX_IMAGE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'convex_image'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.CONVEX_IMAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.COORDS">
+<code class="sig-name descname"><span class="pre">COORDS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'coords'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.COORDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.ECCENTRICITY">
+<code class="sig-name descname"><span class="pre">ECCENTRICITY</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'eccentricity'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.ECCENTRICITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.EQUIVALENT_DIAMETER">
+<code class="sig-name descname"><span class="pre">EQUIVALENT_DIAMETER</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'equivalent_diameter'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.EQUIVALENT_DIAMETER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.EULER_NUMBER">
+<code class="sig-name descname"><span class="pre">EULER_NUMBER</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'euler_number'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.EULER_NUMBER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.EXTENT">
+<code class="sig-name descname"><span class="pre">EXTENT</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'extent'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.EXTENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.FILLED_AREA">
+<code class="sig-name descname"><span class="pre">FILLED_AREA</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'filled_area'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.FILLED_AREA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.FILLED_IMAGE">
+<code class="sig-name descname"><span class="pre">FILLED_IMAGE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'filled_image'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.FILLED_IMAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.IMAGE">
+<code class="sig-name descname"><span class="pre">IMAGE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'image'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.IMAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.INERTIA_TENSOR">
+<code class="sig-name descname"><span class="pre">INERTIA_TENSOR</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'inertia_tensor'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.INERTIA_TENSOR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.INERTIA_TENSOR_EIGVALS">
+<code class="sig-name descname"><span class="pre">INERTIA_TENSOR_EIGVALS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'inertia_tensor_eigvals'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.INERTIA_TENSOR_EIGVALS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.LOCAL_CENTROID">
+<code class="sig-name descname"><span class="pre">LOCAL_CENTROID</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'local_centroid'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.LOCAL_CENTROID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.MAJOR_AXIS_LENGTH">
+<code class="sig-name descname"><span class="pre">MAJOR_AXIS_LENGTH</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'major_axis_length'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.MAJOR_AXIS_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.MINOR_AXIS_LENGTH">
+<code class="sig-name descname"><span class="pre">MINOR_AXIS_LENGTH</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'minor_axis_length'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.MINOR_AXIS_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS">
+<code class="sig-name descname"><span class="pre">MOMENTS</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'moments'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS_CENTRAL">
+<code class="sig-name descname"><span class="pre">MOMENTS_CENTRAL</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'moments_central'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS_CENTRAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS_HU">
+<code class="sig-name descname"><span class="pre">MOMENTS_HU</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'moments_hu'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS_HU" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS_NORMALIZED">
+<code class="sig-name descname"><span class="pre">MOMENTS_NORMALIZED</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'moments_normalized'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.MOMENTS_NORMALIZED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.ORIENTATION">
+<code class="sig-name descname"><span class="pre">ORIENTATION</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'orientation'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.ORIENTATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.PERIMETER">
+<code class="sig-name descname"><span class="pre">PERIMETER</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'perimeter'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.PERIMETER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.SLICE">
+<code class="sig-name descname"><span class="pre">SLICE</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'slice'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.SLICE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.RegionProperties.SOLIDITY">
+<code class="sig-name descname"><span class="pre">SOLIDITY</span></code><em class="property"> <span class="pre">=</span> <span class="pre">'solidity'</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.RegionProperties.SOLIDITY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="imctoolkit.ImageSingleCellData.DEFAULT_REGION_PROPERTIES">
+<code class="sig-name descname"><span class="pre">DEFAULT_REGION_PROPERTIES</span></code><em class="property"> <span class="pre">=</span> <span class="pre">[&lt;RegionProperties.AREA:</span> <span class="pre">'area'&gt;,</span> <span class="pre">&lt;RegionProperties.ECCENTRICITY:</span> <span class="pre">'eccentricity'&gt;,</span> <span class="pre">&lt;RegionProperties.MAJOR_AXIS_LENGTH:</span> <span class="pre">'major_axis_length'&gt;,</span> <span class="pre">&lt;RegionProperties.MINOR_AXIS_LENGTH:</span> <span class="pre">'minor_axis_length'&gt;,</span> <span class="pre">&lt;RegionProperties.ORIENTATION:</span> <span class="pre">'orientation'&gt;]</span></em><a class="headerlink" href="#imctoolkit.ImageSingleCellData.DEFAULT_REGION_PROPERTIES" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="#imctoolkit.ImageSingleCellData.RegionProperties" title="imctoolkit.ImageSingleCellData.RegionProperties"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegionProperties</span></code></a> computed by default, see <a class="reference internal" href="#imctoolkit.ImageSingleCellData.__init__" title="imctoolkit.ImageSingleCellData.__init__"><code class="xref py py-func docutils literal notranslate"><span class="pre">__init__()</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.__init__">
+<code class="sig-name descname"><span class="pre">__init__</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.params.img"></span><strong>img</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.params.img">¶</a> (<a class="reference internal" href="imctoolkit.MultichannelImage.html#imctoolkit.MultichannelImage" title="imctoolkit.MultichannelImage"><em>MultichannelImage</em></a><em> or </em><em>DataArray-like</em>) – intensity image, shape: <code class="docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">y,</span> <span class="pre">x)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.params.mask"></span><strong>mask</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.params.mask">¶</a> (<em>mask file path</em><em> or </em><em>array-like</em>) – (path to) cell mask of shape: <code class="docutils literal notranslate"><span class="pre">(y,</span> <span class="pre">x)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.params.channel_names"></span><strong>channel_names</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.params.channel_names">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – channel names</p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.params.region_properties"></span><strong>region_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.params.region_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">RegionProperties</span></code>]]) – list of <a class="reference internal" href="#imctoolkit.ImageSingleCellData.RegionProperties" title="imctoolkit.ImageSingleCellData.RegionProperties"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegionProperties</span></code></a> to compute, defaults to
+<a class="reference internal" href="#imctoolkit.ImageSingleCellData.DEFAULT_REGION_PROPERTIES" title="imctoolkit.ImageSingleCellData.DEFAULT_REGION_PROPERTIES"><code class="xref py py-attr docutils literal notranslate"><span class="pre">DEFAULT_REGION_PROPERTIES</span></code></a> when <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.image_width">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_width</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.image_width" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image width in pixels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.image_height">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">image_height</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.image_height" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image height in pixels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.num_channels">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">num_channels</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.num_channels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of channels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.channel_names">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">channel_names</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.channel_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Channel names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.num_cells">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">num_cells</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.num_cells" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of cells</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.cell_ids">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">cell_ids</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.cell_ids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Integer cell IDs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.cell_centroids">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">cell_centroids</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.cell_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cell centroids, shape: <code class="docutils literal notranslate"><span class="pre">(cells,</span> <span class="pre">dimensions=2)</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.min_intensities">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">min_intensities</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.min_intensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">channel</span> <span class="pre">names)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.min_intensities_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">min_intensities_table</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.min_intensities_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Minimum cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame (index: cell IDs, columns: channel names)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.max_intensities">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">max_intensities</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.max_intensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">channel</span> <span class="pre">names)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.max_intensities_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">max_intensities_table</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.max_intensities_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame (index: cell IDs, columns: channel names)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.mean_intensities">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mean_intensities</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.mean_intensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">channel</span> <span class="pre">names)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.mean_intensities_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">mean_intensities_table</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.mean_intensities_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame (index: cell IDs, columns: channel names)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.median_intensities">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">median_intensities</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.median_intensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Median cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">channel</span> <span class="pre">names)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.median_intensities_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">median_intensities_table</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.median_intensities_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Median cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame (index: cell IDs, columns: channel names)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.std_intensities">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">std_intensities</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.std_intensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard deviations of cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">channel</span> <span class="pre">names)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.std_intensities_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">std_intensities_table</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.std_intensities_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Standard deviations of cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame (index: cell IDs, columns: channel names)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.var_intensities">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">var_intensities</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.var_intensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variances of cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">channel</span> <span class="pre">names)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.var_intensities_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">var_intensities_table</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.var_intensities_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Variances of cell intensities</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame (index: cell IDs, columns: channel names)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.regionprops">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">regionprops</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.regionprops" title="Permalink to this definition">¶</a></dt>
+<dd><p>Region properties</p>
+<p>For a list of computed properties, see <code class="xref py py-attr docutils literal notranslate"><span class="pre">region_properties</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell_id,</span> <span class="pre">property_name)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.regionprops_table">
+<em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">regionprops_table</span></code><a class="headerlink" href="#imctoolkit.ImageSingleCellData.regionprops_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Region properties</p>
+<p>For a list of computed properties, see <code class="xref py py-attr docutils literal notranslate"><span class="pre">region_properties</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>DataFrame (index: cell IDs, columns: regionprops property names)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.compute_cell_intensities">
+<code class="sig-name descname"><span class="pre">compute_cell_intensities</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aggr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.compute_cell_intensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute cell intensity values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><span class="target" id="imctoolkit.ImageSingleCellData.compute_cell_intensities.params.aggr"></span><strong>aggr</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.compute_cell_intensities.params.aggr">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>[[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>], <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – function for aggregating the pixel values of a cell</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataArray with coordinates <code class="docutils literal notranslate"><span class="pre">(cell</span> <span class="pre">IDs,</span> <span class="pre">channel</span> <span class="pre">names)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.compute_cell_border_distances">
+<code class="sig-name descname"><span class="pre">compute_cell_border_distances</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.compute_cell_border_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the pairwise Euclidean distances between cell borders</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>symmetric border distance matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.to_dataset">
+<code class="sig-name descname"><span class="pre">to_dataset</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_channel_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.to_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an <code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.Dataset</span></code> representation of the current instance</p>
+<p>At least one of <code class="xref py py-paramref docutils literal notranslate"><span class="pre">cell_properties</span></code> or <code class="xref py py-paramref docutils literal notranslate"><span class="pre">cell_channel_properties</span></code> has to be <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.to_dataset.params.cell_properties"></span><strong>cell_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.to_dataset.params.cell_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell properties (e.g. regionprops) to include; set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.to_dataset.params.cell_channel_properties"></span><strong>cell_channel_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.to_dataset.params.cell_channel_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell channel properties (e.g. intensity values) to include; set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dataset</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Dataset with cell ID, channel name and/or property name as coordinates</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.compute_cell_centroid_distances">
+<code class="sig-name descname"><span class="pre">compute_cell_centroid_distances</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euclidean'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.compute_cell_centroid_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the pairwise distances between cell centroids</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><span class="target" id="imctoolkit.ImageSingleCellData.compute_cell_centroid_distances.params.metric"></span><strong>metric</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.compute_cell_centroid_distances.params.metric">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – the distance metric to use, see
+<a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html">https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html</a></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>symmetric cell centroid distance matrix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.to_anndata">
+<code class="sig-name descname"><span class="pre">to_anndata</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_channel_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.to_anndata" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an <code class="xref py py-class docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> representation of the current instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.to_anndata.params.cell_properties"></span><strong>cell_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.to_anndata.params.cell_properties">¶</a> – list of cell properties (e.g. regionprops) to include; set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.to_anndata.params.cell_channel_properties"></span><strong>cell_channel_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.to_anndata.params.cell_channel_properties">¶</a> – list of cell channel properties (e.g. intensity values) to include; set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>AnnData object, in which cell channel properties (e.g. intensity values) are stored as layers and cell
+properties (e.g. regionprops) are stored as observations</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.to_dataframe">
+<code class="sig-name descname"><span class="pre">to_dataframe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_channel_properties</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.to_dataframe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> representation of the current instance</p>
+<p>Column names for cell channel properties (e.g. intensity values) are prefixed by the property name, e.g. a
+<code class="docutils literal notranslate"><span class="pre">mean_intensities</span></code> property would be included as <code class="docutils literal notranslate"><span class="pre">'mean_intensities_{channel_name}'</span></code>. Column names for
+cell properties (e.g. regionprops) are not prefixed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.to_dataframe.params.cell_properties"></span><strong>cell_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.to_dataframe.params.cell_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell properties (e.g. regionprops) to include; set to <code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.to_dataframe.params.cell_channel_properties"></span><strong>cell_channel_properties</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.to_dataframe.params.cell_channel_properties">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Sequence</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – list of cell channel properties (e.g. intensity values) to include; set to
+<code class="docutils literal notranslate"><span class="pre">True</span></code> to include all</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>DataFrame (index: cell IDs, columns: see description)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.write_csv">
+<code class="sig-name descname"><span class="pre">write_csv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.write_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a CSV file, see <a class="reference internal" href="#imctoolkit.ImageSingleCellData.to_dataframe" title="imctoolkit.ImageSingleCellData.to_dataframe"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_dataframe()</span></code></a> for format specifications</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.write_csv.params.path"></span><strong>path</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.write_csv.params.path">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]) – path to the .csv file to be written</p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.write_csv.params.kwargs"></span><strong>kwargs</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.write_csv.params.kwargs">¶</a> – other arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">pandas.DataFrame.to_csv()</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="imctoolkit.ImageSingleCellData.write_fcs">
+<code class="sig-name descname"><span class="pre">write_fcs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.ImageSingleCellData.write_fcs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes an FCS file, see <a class="reference internal" href="#imctoolkit.ImageSingleCellData.to_dataframe" title="imctoolkit.ImageSingleCellData.to_dataframe"><code class="xref py py-func docutils literal notranslate"><span class="pre">to_dataframe()</span></code></a> for format specifications</p>
+<p>Uses <code class="xref py py-func docutils literal notranslate"><span class="pre">fcswrite.write_fcs()</span></code> for writing FCS 3.0 files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.write_fcs.params.path"></span><strong>path</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.write_fcs.params.path">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]) – path to the .fcs file to be written</p></li>
+<li><p><span class="target" id="imctoolkit.ImageSingleCellData.write_fcs.params.kwargs"></span><strong>kwargs</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.ImageSingleCellData.write_fcs.params.kwargs">¶</a> – other arguments passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">fcswrite.write_fcs()</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -166,6 +751,10 @@
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="imctoolkit.SpatialCellGraph.html" class="btn btn-neutral float-right" title="imctoolkit.SpatialCellGraph" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="imctoolkit.MultichannelImage.html" class="btn btn-neutral float-left" title="imctoolkit.MultichannelImage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 

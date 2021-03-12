@@ -38,7 +38,8 @@
 
     
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" /> 
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="imctoolkit.SpatialCellGraph" href="imctoolkit.SpatialCellGraph.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -90,6 +91,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+</ul>
+<p class="caption"><span class="caption-text">API reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.MultichannelImage.html">imctoolkit.MultichannelImage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.ImageSingleCellData.html">imctoolkit.ImageSingleCellData</a></li>
+<li class="toctree-l1"><a class="reference internal" href="imctoolkit.SpatialCellGraph.html">imctoolkit.SpatialCellGraph</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">imctoolkit.utils</a></li>
 </ul>
 
             
@@ -157,8 +165,115 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="imctoolkit-utils">
-<h1>imctoolkit.utils<a class="headerlink" href="#imctoolkit-utils" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-imctoolkit.utils">
+<span id="imctoolkit-utils"></span><h1>imctoolkit.utils<a class="headerlink" href="#module-imctoolkit.utils" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="imctoolkit.utils.hot_pixel_filter">
+<code class="sig-name descname"><span class="pre">hot_pixel_filter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hot_pixel_thres</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.utils.hot_pixel_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hot pixel filter as implemented in <a class="reference external" href="https://github.com/BodenmillerGroup/ImcPluginsCP">https://github.com/BodenmillerGroup/ImcPluginsCP</a></p>
+<p>Sets all hot pixels to the maximum of their 8-neighborhood. Hot pixels are defined as pixels, whose values are
+larger by <code class="docutils literal notranslate"><span class="pre">hot_pixel_thres</span></code> than the maximum of their 8-neighborhood.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.utils.hot_pixel_filter.params.img"></span><strong>img</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.hot_pixel_filter.params.img">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]) – raw image data, shape: <code class="docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">y,</span> <span class="pre">x)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.utils.hot_pixel_filter.params.hot_pixel_thres"></span><strong>hot_pixel_thres</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.hot_pixel_filter.params.hot_pixel_thres">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – hot pixel threshold</p></li>
+<li><p><span class="target" id="imctoolkit.utils.hot_pixel_filter.params.inplace"></span><strong>inplace</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.hot_pixel_filter.params.inplace">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, the image is modified in-place</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The hot pixel-filtered image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="imctoolkit.utils.median_filter_cv2">
+<code class="sig-name descname"><span class="pre">median_filter_cv2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.utils.median_filter_cv2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fast median blur using OpenCV</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.utils.median_filter_cv2.params.img"></span><strong>img</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.median_filter_cv2.params.img">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]) – raw image data, shape: <code class="docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">y,</span> <span class="pre">x)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.utils.median_filter_cv2.params.size"></span><strong>size</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.median_filter_cv2.params.size">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – size of the median filter, must be odd</p></li>
+<li><p><span class="target" id="imctoolkit.utils.median_filter_cv2.params.inplace"></span><strong>inplace</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.median_filter_cv2.params.inplace">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, the image is modified in-place when possible</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the median-filtered image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="imctoolkit.utils.gaussian_filter_cv2">
+<code class="sig-name descname"><span class="pre">gaussian_filter_cv2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.utils.gaussian_filter_cv2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fast Gaussian blur using OpenCV</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.utils.gaussian_filter_cv2.params.img"></span><strong>img</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.gaussian_filter_cv2.params.img">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]) – raw image data, shape: <code class="docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">y,</span> <span class="pre">x)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.utils.gaussian_filter_cv2.params.size"></span><strong>size</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.gaussian_filter_cv2.params.size">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – size of the median filter, must be odd</p></li>
+<li><p><span class="target" id="imctoolkit.utils.gaussian_filter_cv2.params.sigma"></span><strong>sigma</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.gaussian_filter_cv2.params.sigma">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Gaussian kernel standard deviation</p></li>
+<li><p><span class="target" id="imctoolkit.utils.gaussian_filter_cv2.params.inplace"></span><strong>inplace</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.gaussian_filter_cv2.params.inplace">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, the image is modified in-place when possible</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the Gaussian-filtered image</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="imctoolkit.utils.rotate_centered_cv2">
+<code class="sig-name descname"><span class="pre">rotate_centered_cv2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">border_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_bbox</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inplace</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.utils.rotate_centered_cv2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fast centered image rotation using OpenCV</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><span class="target" id="imctoolkit.utils.rotate_centered_cv2.params.img"></span><strong>img</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.rotate_centered_cv2.params.img">¶</a> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]) – raw image data, shape: <code class="docutils literal notranslate"><span class="pre">(c,</span> <span class="pre">y,</span> <span class="pre">x)</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.utils.rotate_centered_cv2.params.angle"></span><strong>angle</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.rotate_centered_cv2.params.angle">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – rotation angle, in degrees</p></li>
+<li><p><span class="target" id="imctoolkit.utils.rotate_centered_cv2.params.border_mode"></span><strong>border_mode</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.rotate_centered_cv2.params.border_mode">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – pixel extrapolation method, see <code class="xref py py-func docutils literal notranslate"><span class="pre">cv2.warpAffine()</span></code></p></li>
+<li><p><span class="target" id="imctoolkit.utils.rotate_centered_cv2.params.expand_bbox"></span><strong>expand_bbox</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.rotate_centered_cv2.params.expand_bbox">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if set to <code class="docutils literal notranslate"><span class="pre">True</span></code>, the bounding box of the resulting image is expanded to contain the full
+rotated image</p></li>
+<li><p><span class="target" id="imctoolkit.utils.rotate_centered_cv2.params.inplace"></span><strong>inplace</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.rotate_centered_cv2.params.inplace">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, the image is modified in-place when possible</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">MultichannelImage</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the image, rotated around its center</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="imctoolkit.utils.to_table">
+<code class="sig-name descname"><span class="pre">to_table</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#imctoolkit.utils.to_table" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a two-dimensional <code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code> to a <code class="xref py py-class docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><span class="target" id="imctoolkit.utils.to_table.params.arr"></span><strong>arr</strong><a class="paramlink headerlink reference internal" href="#imctoolkit.utils.to_table.params.arr">¶</a> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataArray</span></code>) – a two-dimensional <code class="xref py py-class docutils literal notranslate"><span class="pre">xarray.DataArray</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a <cite>pandas.DataFrame</cite> representation of the array</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
@@ -166,6 +281,9 @@
            
           </div>
           <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="imctoolkit.SpatialCellGraph.html" class="btn btn-neutral float-left" title="imctoolkit.SpatialCellGraph" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
 
   <hr/>
 
