@@ -1,0 +1,2 @@
+class TestImageSingleCellData:
+    pass  # TODO

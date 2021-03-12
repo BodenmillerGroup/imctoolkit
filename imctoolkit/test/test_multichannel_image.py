@@ -1,0 +1,2 @@
+class TestMultichannelImage:
+    pass  # TODO
