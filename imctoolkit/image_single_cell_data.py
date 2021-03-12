@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
-import tifffile
 import xarray as xr
 
 from enum import Enum
 from functools import cached_property
 from pathlib import Path
 from scipy.ndimage import distance_transform_edt
-from skimage import measure
+from skimage.measure import regionprops_table
+from tifffile import imread
 from typing import Any, Callable, Optional, Sequence, Union
 
 from imctoolkit import utils
@@ -86,7 +86,7 @@ class ImageSingleCellData(SpatialSingleCellData):
         if not isinstance(img, xr.DataArray):
             img = xr.DataArray(data=img, dims=('c', 'y', 'x'))
         if isinstance(mask, str) or isinstance(mask, Path):
-            mask = tifffile.imread(mask).squeeze()
+            mask = imread(mask).squeeze()
         mask = np.asarray(mask)
         if img.dims != ('c', 'y', 'x'):
             raise ValueError(f'Invalid image dimensions: expected ("c", "y", "x"), got {img.dims}')
@@ -228,7 +228,7 @@ class ImageSingleCellData(SpatialSingleCellData):
     @cached_property
     def _regionprops_with_centroids(self) -> xr.DataArray:
         regionprops_properties = ['label', 'centroid'] + [rp.value for rp in self.region_properties]
-        regionprops_dict = measure.regionprops_table(self.mask, properties=regionprops_properties)
+        regionprops_dict = regionprops_table(self.mask, properties=regionprops_properties)
         df = pd.DataFrame(regionprops_dict, index=regionprops_dict.pop('label'))
         return xr.DataArray(data=df, dims=('cell', 'property'))
 
