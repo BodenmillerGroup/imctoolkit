@@ -3,13 +3,11 @@ on:
   push:
     branches:
       - main
-      - gh-test
     tags:
       - "v*"
   pull_request:
     branches:
       - main
-      - gh-test
   workflow_dispatch:
 jobs:
   test:
@@ -40,6 +38,7 @@ jobs:
         run: |
           pytest
   deploy:
+    name: Deploy
     needs:
       - test
     runs-on: ubuntu-latest
