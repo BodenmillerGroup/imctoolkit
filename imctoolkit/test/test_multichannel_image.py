@@ -1,2 +1,3 @@
 class TestMultichannelImage:
-    pass  # TODO
+    def test_dummy(self):
+        pass  # TODO

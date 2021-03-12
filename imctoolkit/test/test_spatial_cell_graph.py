@@ -1,2 +1,3 @@
 class TestSpatialCellGraph:
-    pass  # TODO
+    def test_dummy(self):
+        pass  # TODO
