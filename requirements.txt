@@ -10,10 +10,6 @@ pytest-datadir
 python-igraph
 scikit-image
 scipy
-sphinx
-sphinx_rtd_theme
-sphinx_paramlinks
-sphinx-autodoc-typehints
 tifffile
 xarray
 xtiff

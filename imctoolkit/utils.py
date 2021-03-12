@@ -54,11 +54,7 @@ def hot_pixel_filter(img: Union[np.ndarray, MultichannelImage], hot_pixel_thres:
         max_neighbor_img = np.moveaxis(max_neighbor_img, 2, 0)
     else:
         max_neighbor_img = filters.maximum_filter(kernel[None, :, :], footprint=kernel, mode='mirror')
-    filter_mask = (img - max_neighbor_img) > hot_pixel_thres
-    if not inplace:
-        img = img.copy()
-    img[filter_mask] = max_neighbor_img[filter_mask]
-    return img
+    return np.where(img - max_neighbor_img > hot_pixel_thres, max_neighbor_img, img)
 
 
 def median_filter_cv2(img: Union[np.ndarray, MultichannelImage], size: int,
