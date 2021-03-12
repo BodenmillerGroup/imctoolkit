@@ -1,4 +1,6 @@
+/.eggs/
 /.idea/
 /docs/build/
 *.egg-info/
 __pycache__/
+_version.py

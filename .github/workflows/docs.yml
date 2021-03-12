@@ -3,9 +3,10 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 jobs:
-  api-docs:
-    name: API documentation
+  docs:
+    name: Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Check out main

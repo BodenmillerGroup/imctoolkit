@@ -1,6 +1,5 @@
 #!/usr/bin/env python
-
-from distutils.core import setup
+from setuptools import find_packages, setup
 from os import path
 
 this_directory = path.abspath(path.dirname(__file__))
@@ -16,14 +15,14 @@ with open(path.join(this_directory, 'requirements.txt'), encoding='utf-8') as f:
 
 setup(
     name='imctoolkit',
-    version='0.1.0',
+    use_scm_version={'write_to': "imctoolkit/_version.py"},
     description='Python package for common tasks in processing segmented multi-channel images',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Jonas Windhager',
     author_email='jonas.windhager@uzh.ch',
     url='https://github.com/BodenmillerGroup/imctoolkit',
-    packages=['imctoolkit'],
+    packages=find_packages(),
     classifiers=[
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: MIT License',
@@ -36,6 +35,7 @@ setup(
     license='MIT',
     python_requires='>=3.8',
     install_requires=install_requires,
+    setup_requires=['setuptools_scm'],
     extras_require={
         'all': ['anndata', 'fcswrite', 'networkx', 'opencv-python', 'python-igraph'],
     },
