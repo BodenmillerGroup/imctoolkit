@@ -16,7 +16,7 @@ with open(path.join(this_directory, 'requirements.txt'), encoding='utf-8') as f:
 setup(
     name='imctoolkit',
     use_scm_version={'write_to': "imctoolkit/_version.py"},
-    description='Python package for common tasks in processing segmented multi-channel images',
+    description='Python package for processing segmented multi-channel images',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Jonas Windhager',
@@ -28,7 +28,8 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
         'Topic :: Scientific/Engineering :: Image Processing',
     ],

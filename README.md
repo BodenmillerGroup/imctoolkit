@@ -1,5 +1,12 @@
 # imctoolkit
 
+![PyPI](https://img.shields.io/pypi/v/imctoolkit)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/imctoolkit)
+![PyPI - License](https://img.shields.io/pypi/l/imctoolkit)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/BodenmillerGroup/imctoolkit/test-and-deploy/main?label=test)
+![GitHub issues](https://img.shields.io/github/issues/BodenmillerGroup/imctoolkit)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/BodenmillerGroup/imctoolkit)
+
 Python package for processing segmented multi-channel images
 
 Documentation is available at [https://bodenmillergroup.github.io/imctoolkit](https://bodenmillergroup.github.io/imctoolkit)
