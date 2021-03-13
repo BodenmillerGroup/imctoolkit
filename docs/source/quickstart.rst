@@ -13,9 +13,11 @@ Most tasks enabled by imctoolkit could also be achieved using other tools and fr
 However, imctoolkit provides a pure "pythonic" framework for IMC data processing, without relying on heavy external
 dependencies.
 
-The imctoolkit package was developed at the same time as the powerful `squidpy`_ package. Unlike squidpy, imctoolkit
-solely focuses on core data processing tasks and does not cover data analysis aspects. As squidpy builds on `anndata`_
-and imctoolkit can export single-cell data to that format, squidpy and imctoolkit should be interoperable.
+.. note::
+
+    The imctoolkit package was developed at the same time as the powerful `squidpy`_ package. Unlike squidpy, imctoolkit
+    solely focuses on core data processing tasks and does not cover data analysis aspects. As squidpy builds on
+    `anndata`_ and imctoolkit can export single-cell data to that format, squidpy and imctoolkit are interoperable.
 
 .. _IMC segmentation pipeline: https://github.com/BodenmillerGroup/ImcSegmentationPipeline
 .. _CellProfiler: https://cellprofiler.org
