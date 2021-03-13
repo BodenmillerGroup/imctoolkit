@@ -1,15 +1,3 @@
-Welcome to imctoolkit's documentation!
-======================================
-
-.. toctree::
-    :caption: Contents
-
-    intro
-    install
-    quickstart
-    changelog
-    contributing
-
 API reference
 =============
 

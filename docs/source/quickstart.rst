@@ -1,6 +1,27 @@
 Quickstart
 ==========
 
+Introduction
+------------
+
+While imctoolkit is agnostic to the image acquisition modality and can be used to process any type of segmented
+multiplexed images, its main focus lies on processing Imaging Mass Cytometry (IMC) data. Specific to IMC data
+processing, imctoolkit bridges image segmentation (e.g., using the `IMC segmentation pipeline`_) and
+downstream single-cell data analysis.
+
+Most tasks enabled by imctoolkit could also be achieved using other tools and frameworks such as `CellProfiler`_.
+However, imctoolkit provides a pure "pythonic" framework for IMC data processing, without relying on heavy external
+dependencies.
+
+The imctoolkit package was developed at the same time as the powerful `squidpy`_ package. Unlike squidpy, imctoolkit
+solely focuses on core data processing tasks and does not cover data analysis aspects. As squidpy builds on `anndata`_
+and imctoolkit can export single-cell data to that format, squidpy and imctoolkit should be interoperable.
+
+.. _IMC segmentation pipeline: https://github.com/BodenmillerGroup/ImcSegmentationPipeline
+.. _CellProfiler: https://cellprofiler.org
+.. _squidpy: https://github.com/theislab/squidpy
+.. _anndata: https://github.com/theislab/anndata
+
 Loading images
 --------------
 
