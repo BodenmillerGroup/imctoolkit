@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Welcome to imctoolkit’s documentation! &mdash; imctoolkit  documentation</title>
+  <title>imctoolkit &mdash; imctoolkit  documentation</title>
   
 
   
@@ -39,7 +39,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Introduction" href="intro.html" /> 
+    <link rel="next" title="Quickstart" href="quickstart.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -84,20 +84,12 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+              <ul>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
-</ul>
-<p class="caption"><span class="caption-text">API reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="stubs/imctoolkit.MultichannelImage.html">imctoolkit.MultichannelImage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stubs/imctoolkit.ImageSingleCellData.html">imctoolkit.ImageSingleCellData</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stubs/imctoolkit.SpatialCellGraph.html">imctoolkit.SpatialCellGraph</a></li>
-<li class="toctree-l1"><a class="reference internal" href="stubs/imctoolkit.utils.html">imctoolkit.utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 
             
@@ -146,13 +138,13 @@
     
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Welcome to imctoolkit’s documentation!</li>
+      <li>imctoolkit</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -165,51 +157,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-imctoolkit-s-documentation">
-<h1>Welcome to imctoolkit’s documentation!<a class="headerlink" href="#welcome-to-imctoolkit-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#installing-imctoolkit">Installing imctoolkit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#installing-imctoolkit-for-r">Installing imctoolkit for R</a></li>
+  <div class="section" id="imctoolkit">
+<h1>imctoolkit<a class="headerlink" href="#imctoolkit" title="Permalink to this headline">¶</a></h1>
+<p>Python package for processing segmented multi-channel images</p>
+<p>Documentation is available at <a class="reference external" href="https://bodenmillergroup.github.io/imctoolkit">https://bodenmillergroup.github.io/imctoolkit</a></p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>This package requires Python 3.8 or later.</p>
+<p>Python package dependencies are listed in <a class="reference external" href="https://github.com/BodenmillerGroup/imctoolkit/blob/main/requirements.txt">requirements.txt</a>.</p>
+<p>Optional Python package dependencies include:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://pypi.org/project/anndata">anndata</a> for exporting single-cell data as AnnData object</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/fcswrite">fcswrite</a> for writing single-cell data as FCS file</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/networkx">networkx</a> for exporting spatial cell graphs to networkx</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/python-igraph">python-igraph</a> for exporting spatial cell graphs to igraph</p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/opencv-python">opencv-python</a> for faster image processing</p></li>
 </ul>
-</li>
+<p>Using virtual environments is strongly recommended.</p>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>Install imctoolkit and its dependencies with:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pip install imctoolkit
+</pre></div>
+</div>
+<p>To also install optional dependencies (see above):</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pip install imctoolkit[all]
+</pre></div>
+</div>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>See <a class="reference external" href="https://bodenmillergroup.github.io/imctoolkit/quickstart.html">Quickstart</a></p>
+</div>
+<div class="section" id="authors">
+<h2>Authors<a class="headerlink" href="#authors" title="Permalink to this headline">¶</a></h2>
+<p>Jonas Windhager<br />
+<a class="reference external" href="mailto:jonas&#46;windhager&#37;&#52;&#48;uzh&#46;ch">jonas<span>&#46;</span>windhager<span>&#64;</span>uzh<span>&#46;</span>ch</a></p>
+</div>
+<div class="section" id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="CONTRIBUTING.html"><span class="doc std std-doc">Contributing</span></a></p>
+</div>
+<div class="section" id="changelog">
+<h2>Changelog<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="CHANGELOG.html"><span class="doc std std-doc">Changelog</span></a></p>
+</div>
+<div class="section" id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference internal" href="LICENSE.html"><span class="doc std std-doc">MIT</span></a></p>
+</div>
+<div class="section" id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart.html#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#loading-images">Loading images</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#extracting-single-cell-data">Extracting single-cell data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html#constructing-spatial-cell-graphs">Constructing spatial cell graphs</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="stubs/imctoolkit.MultichannelImage.html">imctoolkit.MultichannelImage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stubs/imctoolkit.ImageSingleCellData.html">imctoolkit.ImageSingleCellData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stubs/imctoolkit.SpatialCellGraph.html">imctoolkit.SpatialCellGraph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stubs/imctoolkit.utils.html">imctoolkit.utils</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CONTRIBUTING.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CHANGELOG.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LICENSE.html">License</a></li>
 </ul>
 </div>
 </div>
-<div class="section" id="api-reference">
-<h1>API reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
-<tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="stubs/imctoolkit.MultichannelImage.html#imctoolkit.MultichannelImage" title="imctoolkit.MultichannelImage"><code class="xref py py-obj docutils literal notranslate"><span class="pre">imctoolkit.MultichannelImage</span></code></a></p></td>
-<td><p>Functionality for processing multi-channel images</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="stubs/imctoolkit.ImageSingleCellData.html#imctoolkit.ImageSingleCellData" title="imctoolkit.ImageSingleCellData"><code class="xref py py-obj docutils literal notranslate"><span class="pre">imctoolkit.ImageSingleCellData</span></code></a></p></td>
-<td><p>Single-cell data accessor for multi-channel images</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="stubs/imctoolkit.SpatialCellGraph.html#imctoolkit.SpatialCellGraph" title="imctoolkit.SpatialCellGraph"><code class="xref py py-obj docutils literal notranslate"><span class="pre">imctoolkit.SpatialCellGraph</span></code></a></p></td>
-<td><p>Spatial cell graph constructed from single-cell data</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="stubs/imctoolkit.utils.html#module-imctoolkit.utils" title="imctoolkit.utils"><code class="xref py py-obj docutils literal notranslate"><span class="pre">imctoolkit.utils</span></code></a></p></td>
-<td><p></p></td>
-</tr>
-</tbody>
-</table>
 </div>
 
 
@@ -218,7 +239,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="intro.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Quickstart" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
