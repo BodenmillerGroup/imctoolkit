@@ -1,8 +1,8 @@
 Quickstart
 ==========
 
-Introduction
-------------
+Context
+-------
 
 While imctoolkit is agnostic to the image acquisition modality and can be used to process any type of segmented
 multiplexed images, its main focus lies on processing Imaging Mass Cytometry (IMC) data. Specific to IMC data
