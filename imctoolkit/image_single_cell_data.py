@@ -8,7 +8,7 @@ from pathlib import Path
 from scipy.ndimage import distance_transform_edt
 from skimage.measure import regionprops_table
 from tifffile import imread
-from typing import Any, Callable, Optional, Sequence, Union
+from typing import Any, Callable, List, Optional, Sequence, Union
 
 from imctoolkit import utils
 from imctoolkit.multichannel_image import MultichannelImage
@@ -71,7 +71,7 @@ class ImageSingleCellData(SpatialSingleCellData):
         """
 
         :param img: intensity image, shape: ``(c, y, x)``
-        :type img: MultichannelImage or DataArray-like
+        :type img: image file path, MultichannelImage or array-like
         :param mask: (path to) cell mask of shape: ``(y, x)``
         :type mask: mask file path or array-like
         :param channel_names: channel names
@@ -81,6 +81,8 @@ class ImageSingleCellData(SpatialSingleCellData):
         super(ImageSingleCellData, self).__init__()
         if region_properties is None:
             region_properties = self.DEFAULT_REGION_PROPERTIES
+        if isinstance(img, str) or isinstance(img, Path):
+            img = imread(img).squeeze()
         if isinstance(img, MultichannelImage):
             img = img.data
         if not isinstance(img, xr.DataArray):
@@ -114,8 +116,10 @@ class ImageSingleCellData(SpatialSingleCellData):
         return self.img.sizes['c']
 
     @property
-    def channel_names(self) -> np.ndarray:
-        return self.img.coords['c'].values
+    def channel_names(self) -> List[str]:
+        if 'c' in self.img.coords:
+            return self.img.coords['c'].values.tolist()
+        return [f'Channel {i}' for i in range(1, self.num_channels + 1)]
 
     @property
     def num_cells(self) -> int:

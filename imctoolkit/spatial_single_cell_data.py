@@ -5,7 +5,7 @@ import xarray as xr
 from abc import ABC, abstractmethod
 from pathlib import Path
 from scipy.spatial import distance
-from typing import Optional, Sequence, Union
+from typing import Sequence, Union
 
 from imctoolkit import utils
 
@@ -130,22 +130,32 @@ class SpatialSingleCellData(ABC):
         return xr.DataArray(data=dist_mat, dims=('cell_i', 'cell_j'),
                             coords={'cell_i': self.cell_ids, 'cell_j': self.cell_ids})
 
-    def write_csv(self, path: Union[str, Path], **kwargs):
+    def write_csv(self, path: Union[str, Path], cell_properties: Union[bool, Sequence[str]] = False,
+                  cell_channel_properties: Union[bool, Sequence[str]] = False, **kwargs):
         """Writes a CSV file, see :func:`to_dataframe` for format specifications
 
         :param path: path to the .csv file to be written
+        :param cell_properties: list of cell properties (e.g. regionprops) to include; set to ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include; set to
+            ``True`` to include all
         :param kwargs: other arguments passed to :func:`pandas.DataFrame.to_csv`
         """
-        self.to_dataframe().to_csv(path, **kwargs)
+        df = self.to_dataframe(cell_properties=cell_properties, cell_channel_properties=cell_channel_properties)
+        df.to_csv(path, **kwargs)
 
-    def write_fcs(self, path: Union[str, Path], **kwargs):
+    def write_fcs(self, path: Union[str, Path], cell_properties: Union[bool, Sequence[str]] = False,
+                  cell_channel_properties: Union[bool, Sequence[str]] = False, **kwargs):
         """Writes an FCS file, see :func:`to_dataframe` for format specifications
 
         Uses :func:`fcswrite.write_fcs` for writing FCS 3.0 files.
 
         :param path: path to the .fcs file to be written
+        :param cell_properties: list of cell properties (e.g. regionprops) to include; set to ``True`` to include all
+        :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include; set to
+            ``True`` to include all
         :param kwargs: other arguments passed to :func:`fcswrite.write_fcs`
         """
         if fcswrite is None:
             raise RuntimeError('fcswrite is not installed')
-        fcswrite.write_fcs(path, self.channel_names, self.to_dataframe().values, **kwargs)
+        df = self.to_dataframe(cell_properties=cell_properties, cell_channel_properties=cell_channel_properties)
+        fcswrite.write_fcs(path, df.columns.values, df.values, **kwargs)

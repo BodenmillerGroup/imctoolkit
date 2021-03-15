@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import tifffile
 import xarray as xr
@@ -7,7 +6,7 @@ import xtiff
 from imctools.io.mcd.mcdparser import McdParser
 from imctools.io.txt.txtparser import TxtParser
 from pathlib import Path
-from typing import Optional, Sequence, Union
+from typing import List, Optional, Sequence, Union
 from xml.etree import ElementTree
 
 
@@ -49,9 +48,11 @@ class MultichannelImage:
         return self.data.sizes['c']
 
     @property
-    def channel_names(self) -> np.ndarray:
+    def channel_names(self) -> List[str]:
         """Channel names"""
-        return self.data.coords['c'].values
+        if 'c' in self.data.coords:
+            return self.data.coords['c'].values.tolist()
+        return [f'Channel {i}' for i in range(1, self.num_channels + 1)]
 
     def copy(self) -> 'MultichannelImage':
         """Creates a copy of the current instance
@@ -81,7 +82,7 @@ class MultichannelImage:
         :param kwargs: optional keyword arguments passed to the respective ``read_*`` function
         :return: a new :class:`MultichannelImage` instance
         """
-        path_suffix = Path(path).suffix
+        path_suffix = Path(path).suffix.lower()
         if path_suffix == '.txt':
             return cls.read_imc_txt(path, **kwargs)
         elif path_suffix == '.mcd':
