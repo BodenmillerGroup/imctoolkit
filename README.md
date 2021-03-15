@@ -3,7 +3,7 @@
 ![PyPI](https://img.shields.io/pypi/v/imctoolkit)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/imctoolkit)
 ![PyPI - License](https://img.shields.io/pypi/l/imctoolkit)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/BodenmillerGroup/imctoolkit/test-and-deploy/main?label=test)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/BodenmillerGroup/imctoolkit/test-and-deploy/main)
 ![GitHub issues](https://img.shields.io/github/issues/BodenmillerGroup/imctoolkit)
 ![GitHub pull requests](https://img.shields.io/github/issues-pr/BodenmillerGroup/imctoolkit)
 
@@ -43,8 +43,7 @@ See [Quickstart](https://bodenmillergroup.github.io/imctoolkit/quickstart.html)
 
 ## Authors
 
-Jonas Windhager  
-[jonas.windhager@uzh.ch](mailto:jonas.windhager@uzh.ch)
+Created and maintained by Jonas Windhager [jonas.windhager@uzh.ch](mailto:jonas.windhager@uzh.ch)
 
 ## Contributing
 
