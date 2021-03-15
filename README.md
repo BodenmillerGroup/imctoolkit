@@ -48,15 +48,15 @@ Created and maintained by Jonas Windhager [jonas.windhager@uzh.ch](mailto:jonas.
 
 ## Contributing
 
-[Contributing](CONTRIBUTING.md)
+[Contributing](https://bodenmillergroup.github.io/imctoolkit/CONTRIBUTING.html)
 
 ## Changelog
 
-[Changelog](CHANGELOG.md)
+[Changelog](https://bodenmillergroup.github.io/imctoolkit/CHANGELOG.html)
 
 ## License
 
-[MIT](LICENSE.md)
+[MIT](https://bodenmillergroup.github.io/imctoolkit/LICENSE.html)
 
 ## Contents
 
