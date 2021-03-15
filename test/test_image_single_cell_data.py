@@ -27,8 +27,7 @@ class TestImageSingleCellData:
         assert np.sum(cell_border_distances < 15) == 837
 
     def test_to_dataset(self, data: ImageSingleCellData):
-        ds = data.to_dataset(cell_properties=True, cell_channel_properties=True)
-        assert ds.nbytes == 13676
+        data.to_dataset(cell_properties=True, cell_channel_properties=True)
 
     def test_to_dataframe(self, data: ImageSingleCellData):
         df = data.to_dataframe(cell_properties=True, cell_channel_properties=True)
