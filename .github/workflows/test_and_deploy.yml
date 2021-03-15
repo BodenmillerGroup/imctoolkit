@@ -36,7 +36,7 @@ jobs:
           pip install --upgrade ".[all]"
       - name: Test with pytest
         run: |
-          pytest
+          pytest --cov=./
       - name: Coverage
         uses: codecov/codecov-action@v1
   deploy:
