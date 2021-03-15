@@ -43,8 +43,11 @@ See [Quickstart](https://bodenmillergroup.github.io/imctoolkit/quickstart.html)
 
 ## Authors
 
-Jonas Windhager  
-[jonas.windhager@uzh.ch](mailto:jonas.windhager@uzh.ch)
+Jonas Windhager [jonas.windhager@uzh.ch](mailto:jonas.windhager@uzh.ch)
+
+## Maintainer
+
+Jonas Windhager [jonas.windhager@uzh.ch](mailto:jonas.windhager@uzh.ch)
 
 ## Contributing
 
