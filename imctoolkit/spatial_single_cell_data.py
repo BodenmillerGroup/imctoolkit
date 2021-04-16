@@ -94,13 +94,13 @@ class SpatialSingleCellData(ABC):
 
     def to_anndata(self, cell_properties: Union[bool, Sequence[str]] = False,
                    cell_channel_properties: Union[bool, Sequence[str]] = False,
-                   x_channel_property: Optional[str] = None) -> 'anndata.AnnData':
+                   x_cell_channel_property: Optional[str] = None) -> 'anndata.AnnData':
         """Returns an :class:`anndata.AnnData` representation of the current instance
 
         :param cell_properties: list of cell properties (e.g. regionprops) to include; set to ``True`` to include all
         :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include; set to
             ``True`` to include all
-        :param x_channel_property: cell channel property to use for the main AnnData data matrix (X)
+        :param x_cell_channel_property: cell channel property to use for the main AnnData data matrix (X)
         :return: AnnData object, in which cell channel properties (e.g. intensity values) are stored as layers and cell
             properties (e.g. regionprops) are stored as observations
         """
@@ -115,11 +115,11 @@ class SpatialSingleCellData(ABC):
             cell_channel_property_dataset = self.to_dataset(cell_channel_properties=cell_channel_properties)
             layers = {property_name: da.values for property_name, da in cell_channel_property_dataset.data_vars.items()}
         return anndata.AnnData(
-            X=getattr(self, x_channel_property).values if x_channel_property is not None else None,
+            X=getattr(self, x_cell_channel_property).values if x_cell_channel_property is not None else None,
             obs=pd.DataFrame(index=pd.Index(data=self.cell_ids.astype(str), name='cell'), data=obs_data),
             var=pd.DataFrame(index=pd.Index(data=self.channel_names, name='channel')),
             layers=layers or None,
-            shape=(self.num_cells, self.num_channels) if x_channel_property is None else None,
+            shape=(self.num_cells, self.num_channels) if x_cell_channel_property is None else None,
         )
 
     def compute_cell_centroid_distances(self, metric: str = 'euclidean') -> xr.DataArray:

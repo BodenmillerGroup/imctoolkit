@@ -34,7 +34,8 @@ class TestImageSingleCellData:
         assert df.shape == (47, 35)
 
     def test_to_anndata(self, data: ImageSingleCellData):
-        ad = data.to_anndata(cell_properties=True, cell_channel_properties=True, x_channel_property="mean_intensities")
+        ad = data.to_anndata(cell_properties=True, cell_channel_properties=True,
+                             x_cell_channel_property="mean_intensities")
         assert ad.X.shape == (47, 5)
         assert ad.shape == (47, 5)
         assert len(ad.layers) == 6
