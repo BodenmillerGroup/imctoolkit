@@ -113,7 +113,7 @@ To construct spatial cell graphs ("neighborhood graphs") from single-cell data, 
 
     from imctoolkit import SpatialCellGraph
 
-    dist_mat = data.compute_border_distances()
+    dist_mat = data.compute_cell_border_distances()
     graph = SpatialCellGraph.construct_dist_graph(data, dist_mat, 15, cell_channel_properties=True)
 
 .. note::
