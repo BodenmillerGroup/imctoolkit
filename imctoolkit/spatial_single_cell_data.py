@@ -5,7 +5,7 @@ import xarray as xr
 from abc import ABC, abstractmethod
 from pathlib import Path
 from scipy.spatial import distance
-from typing import Sequence, Union
+from typing import Optional, Sequence, Union
 
 from imctoolkit import utils
 
@@ -93,12 +93,14 @@ class SpatialSingleCellData(ABC):
         return df
 
     def to_anndata(self, cell_properties: Union[bool, Sequence[str]] = False,
-                   cell_channel_properties: Union[bool, Sequence[str]] = False) -> 'anndata.AnnData':
+                   cell_channel_properties: Union[bool, Sequence[str]] = False,
+                   x_channel_property: Optional[str] = None) -> 'anndata.AnnData':
         """Returns an :class:`anndata.AnnData` representation of the current instance
 
         :param cell_properties: list of cell properties (e.g. regionprops) to include; set to ``True`` to include all
         :param cell_channel_properties: list of cell channel properties (e.g. intensity values) to include; set to
             ``True`` to include all
+        :param x_channel_property: cell channel property to use for the main AnnData data matrix (X)
         :return: AnnData object, in which cell channel properties (e.g. intensity values) are stored as layers and cell
             properties (e.g. regionprops) are stored as observations
         """
@@ -108,15 +110,16 @@ class SpatialSingleCellData(ABC):
         if cell_properties:
             cell_property_dataset = self.to_dataset(cell_properties=cell_properties)
             obs_data = utils.to_table(xr.concat(cell_property_dataset.data_vars.values(), 'property'))
-        layers = None
+        layers = {}
         if cell_channel_properties:
             cell_channel_property_dataset = self.to_dataset(cell_channel_properties=cell_channel_properties)
             layers = {property_name: da.values for property_name, da in cell_channel_property_dataset.data_vars.items()}
         return anndata.AnnData(
+            X=getattr(self, x_channel_property).values if x_channel_property is not None else None,
             obs=pd.DataFrame(index=pd.Index(data=self.cell_ids.astype(str), name='cell'), data=obs_data),
             var=pd.DataFrame(index=pd.Index(data=self.channel_names, name='channel')),
-            layers=layers,
-            shape=(self.num_cells, self.num_channels)
+            layers=layers or None,
+            shape=(self.num_cells, self.num_channels) if x_channel_property is None else None,
         )
 
     def compute_cell_centroid_distances(self, metric: str = 'euclidean') -> xr.DataArray:
