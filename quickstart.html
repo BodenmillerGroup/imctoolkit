@@ -251,7 +251,7 @@ data formats for further data analysis, for example:</p>
 <code class="docutils literal notranslate"><span class="pre">construct_</span></code> function of the <a class="reference internal" href="stubs/imctoolkit.SpatialCellGraph.html#imctoolkit.SpatialCellGraph" title="imctoolkit.SpatialCellGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">imctoolkit.SpatialCellGraph</span></code></a> class, for example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">imctoolkit</span> <span class="kn">import</span> <span class="n">SpatialCellGraph</span>
 
-<span class="n">dist_mat</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">compute_border_distances</span><span class="p">()</span>
+<span class="n">dist_mat</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">compute_cell_border_distances</span><span class="p">()</span>
 <span class="n">graph</span> <span class="o">=</span> <span class="n">SpatialCellGraph</span><span class="o">.</span><span class="n">construct_dist_graph</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dist_mat</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="n">cell_channel_properties</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
