@@ -106,19 +106,19 @@ class SpatialSingleCellData(ABC):
         """
         if anndata is None:
             raise RuntimeError('anndata is not installed')
-        obs_data = None
+        obs = None
         if cell_properties:
             cell_property_dataset = self.to_dataset(cell_properties=cell_properties)
-            obs_data = utils.to_table(xr.concat(cell_property_dataset.data_vars.values(), 'property'))
-        layers = {}
+            obs = utils.to_table(xr.concat(cell_property_dataset.data_vars.values(), 'property'))
+            obs.index = obs.index.astype(str)
+        layers = None
         if cell_channel_properties:
             cell_channel_property_dataset = self.to_dataset(cell_channel_properties=cell_channel_properties)
             layers = {property_name: da.values for property_name, da in cell_channel_property_dataset.data_vars.items()}
         return anndata.AnnData(
             X=getattr(self, x_cell_channel_property).values if x_cell_channel_property is not None else None,
-            obs=pd.DataFrame(index=pd.Index(data=self.cell_ids.astype(str), name='cell'), data=obs_data),
-            var=pd.DataFrame(index=pd.Index(data=self.channel_names, name='channel')),
-            layers=layers or None,
+            obs=obs,
+            layers=layers,
             shape=(self.num_cells, self.num_channels) if x_cell_channel_property is None else None,
         )
 
