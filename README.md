@@ -1,5 +1,7 @@
 # imctoolkit
 
+WARNING: This package has been deprecated in favor of [steinbock](https://github.com/BodenmillerGroup/steinbock)!
+
 ![PyPI](https://img.shields.io/pypi/v/imctoolkit)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/imctoolkit)
 ![PyPI - License](https://img.shields.io/pypi/l/imctoolkit)
